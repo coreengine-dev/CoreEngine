@@ -2,15 +2,15 @@ plugins {
     id("com.android.library")
     kotlin("android")
 }
-
 android {
-    namespace = "org.coreengine.android.host"
-    compileSdk = 36
-
-    defaultConfig {
-        minSdk = 24
+    compileSdk = 34
+    defaultConfig { minSdk = 24 }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }
+kotlin { jvmToolchain(17) }
 
 dependencies {
     implementation(project(":coreengine-api"))
