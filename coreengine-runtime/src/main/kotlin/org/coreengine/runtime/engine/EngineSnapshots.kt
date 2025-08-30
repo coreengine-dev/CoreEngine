@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package api.coreengine.runtime.engine
+package org.coreengine.runtime.engine
 
-import org.coreengine.state.EngineSnapshot
+import org.coreengine.runtime.state.EngineSnapshot
+
 
 /**
  * Hooks de snapshot/restore.

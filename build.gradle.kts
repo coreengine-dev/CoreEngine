@@ -1,12 +1,11 @@
-import java.nio.file.Files
 import java.nio.file.Paths
-
 
 
 plugins {
     alias(libs.plugins.android.application) apply false
-    alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.android.library) apply false
+    alias(libs.plugins.kotlin.android) apply false
+    alias(libs.plugins.kotlin.jvm) apply false
     id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.18.1"
 
 }
@@ -14,14 +13,47 @@ plugins {
 subprojects {
     group = rootProject.group
     version = rootProject.version
+
+    tasks.withType<Test>().configureEach {
+        useJUnitPlatform()
+    }
+}
+
+subprojects {
+    // aplica toolchain a todo módulo Kotlin
+    pluginManager.withPlugin("org.jetbrains.kotlin.jvm") {
+        extensions.configure<org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension> {
+            jvmToolchain(17)
+        }
+    }
+    pluginManager.withPlugin("org.jetbrains.kotlin.android") {
+        extensions.configure<com.android.build.gradle.BaseExtension> {
+            compileSdkVersion(36)
+            defaultConfig { minSdk = 24 }
+            compileOptions {
+                sourceCompatibility = JavaVersion.VERSION_17
+                targetCompatibility = JavaVersion.VERSION_17
+            }
+        }
+    }
 }
 
 apiValidation {
+    // Solo validar API pública del núcleo puro
     ignoredProjects.addAll(
-        rootProject.subprojects.map { it.name }.filter { it != "coreengine-api" }
+        setOf(
+            "coreengine-android-host",
+            "coreengine-runtime",
+            "coreengine-render-canvas",
+            "coreengine-render-gl",
+            "coreengine-integration",
+            "samples",
+            "demo-app"
+        )
     )
     nonPublicMarkers += listOf("org.coreengine.InternalApi")
 }
+
 
 //********** Aplica licencia en la cabecera de todos los archivos ks***********
 val licenseHeader = """
@@ -43,6 +75,7 @@ val licenseHeader = """
 """.trimIndent()
 
 tasks.register("applyLicenseHeaders") {
+    notCompatibleWithConfigurationCache("Uses script objects")
     doLast {
         fileTree(".") {
             include("**/*.kt")
@@ -57,8 +90,6 @@ tasks.register("applyLicenseHeaders") {
 }
 
 // ./gradlew applyLicenseHeaders
-
-
 
 
 //*******genera un archivo txt de cada mudulo que se encuntra el la aplicaión**********
@@ -90,23 +121,27 @@ tasks.register("kotlinInventoryChunked") {
             return true
         }
 
-        val outDir = file("${rootProject.buildDir}/reports/kotlin-inventory")
+        val outDir = rootProject.layout.buildDirectory.dir("reports/kotlin-inventory").get().asFile
         outDir.mkdirs()
 
-        val ktMatcher = Regex("""\b(?:(?:data|sealed|enum|annotation)\s+)?(class|interface|object)\s+([A-Za-z_][A-Za-z0-9_]*)""")
+
+        val ktMatcher =
+            Regex("""\b(?:(?:data|sealed|enum|annotation)\s+)?(class|interface|object)\s+([A-Za-z_][A-Za-z0-9_]*)""")
         val pkgMatcher = Regex("""^\s*package\s+([A-Za-z0-9_.]+)""")
         val impMatcher = Regex("""^\s*import\s+([A-Za-z0-9_.*]+)""")
         fun bytesOf(s: String) = s.toByteArray(Charsets.UTF_8).size
-        fun moduleId(p: Project) = p.path.replace(':','_').ifEmpty { "root" }
+        fun moduleId(p: Project) = p.path.replace(':', '_').ifEmpty { "root" }
 
         rootProject.subprojects
             .filter(::moduleAllowed)
             .forEach { sub ->
-                val tree = sub.fileTree(mapOf(
-                    "dir" to sub.projectDir,
-                    "includes" to listOf("**/*.kt"),
-                    "excludes" to listOf("**/build/**","**/.gradle/**","**/out/**")
-                ))
+                val tree = sub.fileTree(
+                    mapOf(
+                        "dir" to sub.projectDir,
+                        "includes" to listOf("**/*.kt"),
+                        "excludes" to listOf("**/build/**", "**/.gradle/**", "**/out/**")
+                    )
+                )
 
                 val modId = moduleId(sub)
                 var part = 1
@@ -132,18 +167,29 @@ tasks.register("kotlinInventoryChunked") {
 
                     val pkg = lines.firstOrNull { it.trimStart().startsWith("package ") }
                         ?.let { pkgMatcher.find(it)?.groupValues?.getOrNull(1) } ?: "(sin paquete)"
-                    val imports = lines.mapNotNull { impMatcher.find(it)?.groupValues?.getOrNull(1) }
-                        .distinct().sorted()
-                    val classes = ktMatcher.findAll(text).map { it.groupValues[1] + " " + it.groupValues[2] }.toList()
+                    val imports =
+                        lines.mapNotNull { impMatcher.find(it)?.groupValues?.getOrNull(1) }
+                            .distinct().sorted()
+                    val classes =
+                        ktMatcher.findAll(text).map { it.groupValues[1] + " " + it.groupValues[2] }
+                            .toList()
 
                     val block = buildString {
                         appendLine("MODULE: ${sub.path}")
                         appendLine("FILE: $rel")
                         appendLine("PACKAGE: $pkg")
                         appendLine("IMPORTS:")
-                        if (imports.isEmpty()) appendLine("  (ninguno)") else imports.forEach { appendLine("  - $it") }
+                        if (imports.isEmpty()) appendLine("  (ninguno)") else imports.forEach {
+                            appendLine(
+                                "  - $it"
+                            )
+                        }
                         appendLine("CLASSES:")
-                        if (classes.isEmpty()) appendLine("  (ninguna)") else classes.forEach { appendLine("  - $it") }
+                        if (classes.isEmpty()) appendLine("  (ninguna)") else classes.forEach {
+                            appendLine(
+                                "  - $it"
+                            )
+                        }
                         appendLine("SOURCE-BEGIN")
                         appendLine(text)
                         appendLine("SOURCE-END")
@@ -160,9 +206,17 @@ tasks.register("kotlinInventoryChunked") {
                             appendLine("FILE: $rel")
                             appendLine("PACKAGE: $pkg")
                             appendLine("IMPORTS:")
-                            if (imports.isEmpty()) appendLine("  (ninguno)") else imports.forEach { appendLine("  - $it") }
+                            if (imports.isEmpty()) appendLine("  (ninguno)") else imports.forEach {
+                                appendLine(
+                                    "  - $it"
+                                )
+                            }
                             appendLine("CLASSES:")
-                            if (classes.isEmpty()) appendLine("  (ninguna)") else classes.forEach { appendLine("  - $it") }
+                            if (classes.isEmpty()) appendLine("  (ninguna)") else classes.forEach {
+                                appendLine(
+                                    "  - $it"
+                                )
+                            }
                             appendLine("SOURCE-BEGIN (chunked)")
                         }
                         val footer = "\nSOURCE-END\n" + "-".repeat(80) + "\n"
@@ -210,3 +264,7 @@ tasks.register("kotlinInventoryChunked") {
 //# -PinventoryIncludeRegex="^:(coreengine|engine)(:.*)?$"
 //# -PinventoryIncludeApps=true
 
+
+//    ./gradlew clean :coreengine-runtime:test
+//    ./gradlew :samples:demo-app:assembleDebug
+//    ./gradlew build

@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
-package org.coreengine.render.canvas
+package org.coreengine.canvas
 
 import android.graphics.Paint
-import org.coreengine.camera.Camera
-import org.coreengine.engine.metrics.FrameMetrics
-import org.coreengine.render.canvas.hud.HudLayer
-import org.coreengine.render.canvas.hud.MetricsSink
-import org.coreengine.render.Renderer
+import org.coreengine.api.camera.Camera
+import org.coreengine.api.hud.HudLayer
+import org.coreengine.api.render.Renderer
+import org.coreengine.canvas.hud.MetricsSink
 
 /**
  * HUD de métricas para backend Canvas.
  * No mide tiempo. Solo muestra valores provistos por el engine.
  */
-class CoreMetricsHud(
+/*class CoreMetricsHud(
     private val overlay: MetricsOverlayCanvas
-) : HudLayer(), FpsHud, MetricsSink {
+) : HudLayer, FpsHud, MetricsSink
+{
 
     private val paint = Paint().apply {
         color = 0xFFFFFFFF.toInt()
@@ -57,7 +57,7 @@ class CoreMetricsHud(
         pushToOverlay()
     }
 
-    /** Permite actualizar el HUD con memoria si el host la conoce. */
+    *//** Permite actualizar el HUD con memoria si el host la conoce. *//*
     fun setAllocKb(kb: Int) {
         lastAllocKb = kb
         pushToOverlay()
@@ -77,8 +77,11 @@ class CoreMetricsHud(
         )
     }
 
+    override var visible: Boolean = true
+    override var zIndex: Int = Int.MAX_VALUE
+
     override fun onDraw(r: Renderer, c: Camera) {
         val cr = r as? CanvasRenderer ?: return
         overlay.draw(cr, paint, 8f, 28f)
     }
-}
+}*/

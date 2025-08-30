@@ -16,6 +16,7 @@
 
 package org.coreengine.android.host
 
-import org.coreengine.resource.TextureManager
+import org.coreengine.api.resource.TextureManager
+
 
 class AndroidTextureManager : TextureManager

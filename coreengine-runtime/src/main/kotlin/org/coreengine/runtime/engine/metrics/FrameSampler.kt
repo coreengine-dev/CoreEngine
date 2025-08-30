@@ -18,7 +18,7 @@
 // Archivo: org/coreengine/engine/metrics/FrameSampler.kt
 // Rol TCD: 𝛂 (acumulador, frecuencia efectiva)
 // ─────────────────────────────────────────────────
-package api.coreengine.runtime.engine.metrics
+package org.coreengine.runtime.engine.metrics
 
 class FrameSampler(private val targetFps: Int) {
     private var frame = 0L

@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package org.coreengine.render.canvas.hud
+package org.coreengine.canvas.hud
 
-import org.coreengine.entity.Entity
-import org.coreengine.input.InputEvent
-import org.coreengine.input.InputListener
+import org.coreengine.api.entity.Entity
+import org.coreengine.api.input.InputEvent
+import org.coreengine.api.input.InputListener
+
 
 /**
  * Capa HUD dibujada sobre la escena.
@@ -30,7 +31,7 @@ import org.coreengine.input.InputListener
  * Pensada para botones, overlays, debug panels.
  */
 // org.coreengine.hud.HudLayer
-open class HudLayer : Entity(), InputListener {
+/*open class HudLayer : Entity(), InputListener {
     override fun onInput(ev: InputEvent): Boolean {
         // igual que Entity: prioriza hijos por z
         val sorted = children.sortedByDescending { it.zIndex }
@@ -38,7 +39,7 @@ open class HudLayer : Entity(), InputListener {
         // si el HUD mismo fuese clickeable:
         return super.onInput(ev)
     }
-}
+}*/
 
 
 

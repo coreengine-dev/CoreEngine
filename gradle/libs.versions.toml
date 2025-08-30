@@ -1,12 +1,12 @@
 [versions]
 # Toolchain
-agp = "8.12.1"
-coreKtxVersion = "1.13.1"
+agp = "8.12.2"
 kotlin = "2.0.21"
 
 # AndroidX / Compose
 composeBom = "2025.08.00"
 activityCompose = "1.9.3"
+kotlinxCoroutinesCore = "1.10.2"
 lifecycleRuntimeCompose = "2.8.4"
 coreKtx = "1.17.0"
 appcompat = "1.7.1"
@@ -18,15 +18,20 @@ material = "1.12.0"
 junit = "4.13.2"
 junitVersion = "1.3.0"
 espressoCore = "3.7.0"
-junitJupiter = "5.13.4"
+junitJupiter = "5.10.2"
 junitPlatformLauncher = "1.13.4"
 junitVintageEngine = "5.13.4"
+mockk = "1.13.12"
+androidx-test = "1.6.1"
+espresso = "3.6.1"
+corektx = "1.13.1"
+junitKtx = "1.3.0"
 
 [libraries]
 # Base AndroidX
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
-androidx-core-ktx-v1131 = { module = "androidx.core:core-ktx", version.ref = "coreKtxVersion" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-coordinatorlayout = { module = "androidx.coordinatorlayout:coordinatorlayout", version.ref = "coordinatorlayout" }
 androidx-viewpager2 = { module = "androidx.viewpager2:viewpager2", version.ref = "viewpager2" }
@@ -48,9 +53,17 @@ junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "jun
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "junitPlatformLauncher" }
 junit-platform-suite = { module = "org.junit.platform:junit-platform-suite", version.ref = "junitPlatformLauncher" }
 junit-vintage-engine = { module = "org.junit.vintage:junit-vintage-engine", version.ref = "junitVintageEngine" }
-
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+androidx-test-core = { module = "androidx.test:core", version.ref = "androidx-test" }
+androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidx-test" }
+androidx-test-rules = { module = "androidx.test:rules", version.ref = "androidx-test" }
+espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso" }
+core-ktx = { module = "androidx.core:core-ktx", version.ref = "corektx" }
+androidx-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junitKtx" }
+platform-junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library     = { id = "com.android.library",     version.ref = "agp" }
 kotlin-android      = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-jvm          = { id = "org.jetbrains.kotlin.jvm",     version.ref = "kotlin" }
 kotlin-compose      = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

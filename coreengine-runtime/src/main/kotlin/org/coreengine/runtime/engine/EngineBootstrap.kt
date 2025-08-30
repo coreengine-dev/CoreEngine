@@ -20,21 +20,22 @@
 // Rol TCD: orquestación del ciclo 𝛂→…→𝝎 sin tocar tu Engine.
 // Se integra desde MainActivity/AppController.
 // ─────────────────────────────────────────────────
-package api.coreengine.runtime.engine
+package org.coreengine.runtime.engine
 
-import org.coreengine.engine.metrics.FrameMetrics
-import org.coreengine.engine.metrics.FrameSampler
-import org.coreengine.engine.profile.DeviceProfile
-import org.coreengine.engine.profile.ProfileRunner
-import org.coreengine.engine.metrics.CheckerReport
-import org.coreengine.engine.metrics.FrameChecker
-import org.coreengine.engine.metrics.BudgetEnforcer
-import org.coreengine.scene.SceneManifest
-import org.coreengine.state.EngineSnapshot
-import org.coreengine.time.Strategy
-import org.coreengine.time.UpdateNode
-import org.coreengine.time.UpdateWorkList
-import org.coreengine.util.Debug
+import org.coreengine.api.scene.SceneManifest
+import org.coreengine.runtime.engine.metrics.BudgetEnforcer
+import org.coreengine.runtime.engine.metrics.CheckerReport
+import org.coreengine.runtime.engine.metrics.FrameChecker
+import org.coreengine.runtime.engine.metrics.FrameMetrics
+import org.coreengine.runtime.engine.metrics.FrameSampler
+import org.coreengine.runtime.engine.profile.DeviceProfile
+import org.coreengine.runtime.engine.profile.ProfileRunner
+import org.coreengine.runtime.state.EngineSnapshot
+import org.coreengine.runtime.time.Strategy
+import org.coreengine.runtime.time.UpdateNode
+import org.coreengine.runtime.time.UpdateWorkList
+import org.coreengine.runtime.util.Debug
+
 
 // EngineBootstrap (versión segura)
 class EngineBootstrap(

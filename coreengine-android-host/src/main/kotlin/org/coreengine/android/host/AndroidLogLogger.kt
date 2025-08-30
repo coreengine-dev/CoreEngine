@@ -17,8 +17,8 @@
 package org.coreengine.android.host
 
 import android.util.Log
-import org.coreengine.util.LogLevel
-import org.coreengine.util.Logger
+import org.coreengine.api.util.LogLevel
+import org.coreengine.api.util.Logger
 
 class AndroidLogLogger(
     override var level: LogLevel = LogLevel.VERBOSE,

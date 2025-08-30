@@ -14,50 +14,26 @@
  * limitations under the License.
  */
 
-/**
- * Núcleo del motor.
- *
- * Ciclo por frame:
- *   dt = clock.tick()
- *   → (intents) drenar EngineIntent*  [UDF: control]
- *   → (run-on-update) ejecutar bloques seguros en hilo del engine
- *   → input.dispatch(hud, scene)      [𝚿: input → HUD → Scene]
- *   → scene.onUpdate(dt)              [∇: lógica]
- *   → renderer.begin(camera)
- *        renderer.clear()
- *        scene.onDraw(renderer, camera)
- *        hudManager.draw(renderer, camera)
- *     renderer.end()                  [𝐌: render]
- *   → publicar EngineUiState          [𝝎: observación]
- *
- * Flags:
- *  - running: “debe avanzar frames” (no implica hilo vivo)
- *  - paused:  “no avanzar frames” pero seguir drenando intents
- *  - stopRequested: terminar loop (hilo sale)
- */
 
-package api.coreengine.runtime.engine
+package org.coreengine.runtime.engine
 
-import org.coreengine.hud.HudLayer
-import org.coreengine.hud.HudManager
-import org.coreengine.hud.MetricsSink
-import org.coreengine.input.InputManager
-import org.coreengine.render.Renderer
-import org.coreengine.render.SurfaceBackedRenderer
-import org.coreengine.resource.ResourceManager
-import org.coreengine.scene.Scene
-import org.coreengine.state.EngineIntent
-import org.coreengine.state.EngineStore
-import org.coreengine.state.EngineStoreImpl
-import org.coreengine.time.Clock
-import org.coreengine.time.FrameStats
-import org.coreengine.time.ThreadTicker
-import org.coreengine.time.Ticker
-import org.coreengine.util.ConsoleLogger
-import org.coreengine.util.Debug
-import org.coreengine.util.Logger
+import org.coreengine.api.hud.HudLayer
+import org.coreengine.api.render.Renderer
+import org.coreengine.api.resource.EngineServices
+import org.coreengine.api.resource.ResourceManager
+import org.coreengine.api.scene.Scene
+import org.coreengine.api.time.Ticker
+import org.coreengine.api.util.Logger
+import org.coreengine.runtime.input.InputManager
+import org.coreengine.runtime.render.SurfaceBackedRenderer
+import org.coreengine.runtime.state.EngineIntent
+import org.coreengine.runtime.state.EngineStore
+import org.coreengine.runtime.state.EngineStoreImpl
+import org.coreengine.runtime.time.FrameStats
+import org.coreengine.runtime.util.ConsoleLogger
+import org.coreengine.runtime.util.Debug
 
-private fun sceneIdOf(s: Scene) = s.toString()
+private fun sceneIdOf(s: Scene) = s.id
 
 class CoreEngine private constructor(
     val config: EngineConfig,
@@ -66,27 +42,45 @@ class CoreEngine private constructor(
     val resourceManager: ResourceManager,
     val hudManager: HudManager,
     val inputManager: InputManager,
-    val clock: Clock,
     private val fpsHudFactory: (() -> HudLayer)?,
-)
-{
+) {
 
+    val services: EngineServices = object : EngineServices {
+        override val renderer get() = this@CoreEngine.renderer
+        override val resourceManager get() = this@CoreEngine.resourceManager
+        override val logger get() = Debug.logger
+    }
+
+    companion object {
+        fun builder(): Builder = Builder()
+    }
+
+
+    // ---- Estado de ejecución
+    @Volatile
+    private var stopRequested = false
+    @Volatile
+    private var paused = false
+    @Volatile
+    private var running = false
+    private var frameCount = 0L
+    private var fpsHud: HudLayer? = null
+    private val sampler = FrameStats()
+
+    private val _storeImpl = EngineStoreImpl()
+    val store: EngineStore get() = _storeImpl
+
+    // ---- Frame loop (update + input + render + métricas)
     internal fun tickFrame(dt: Float) {
-        // 0) Drenar intents (≤64) y reflejar sceneId si cambia
+        // 0) Drenar intents (≤64)
         var pendingRunBlocks: MutableList<(Float) -> Unit>? = null
         var drained = 0
         while (drained++ < 64) {
             val polled = _storeImpl.intents.tryReceive().getOrNull() ?: break
-            when (polled) {
-                is EngineIntent.Pause -> pause()
-                is EngineIntent.Resume -> resume()
-                is EngineIntent.SetScene -> {
-                    sceneManager.replace(polled.factory)
-                    _storeImpl.update { st -> st.copy(sceneId = sceneKey()) }
-                }
-                is EngineIntent.RunOnUpdate -> {
-                    (pendingRunBlocks ?: mutableListOf()).also { pendingRunBlocks = it }.add(polled.block)
-                }
+            // TODO: reactivar intents cuando toque (Pause/Resume/SetScene/RunOnUpdate)
+            if (polled is EngineIntent.RunOnUpdate) {
+                (pendingRunBlocks ?: mutableListOf()).also { pendingRunBlocks = it }
+                    .add(polled.block)
             }
         }
 
@@ -103,7 +97,7 @@ class CoreEngine private constructor(
             return
         }
 
-        // 3) RunOnUpdate ANTES del update
+        // 3) RunOnUpdate antes del update
         pendingRunBlocks?.forEach { it(dt) }
         pendingRunBlocks = null
 
@@ -112,7 +106,7 @@ class CoreEngine private constructor(
         scene.onUpdate(dt)
         val msUpdate = (System.nanoTime() - tUpd0) / 1_000_000f
 
-        // 5) Input DESPUÉS del update
+        // 5) Input después del update
         inputManager.dispatch(hudManager, scene)
 
         // 6) FPS
@@ -122,17 +116,18 @@ class CoreEngine private constructor(
         var draws = 0
         var msRender = 0f
         var rendered = false
+        val surfaceOk = (renderer as? SurfaceBackedRenderer)?.hasSurface ?: true
         try {
-            renderer.begin(scene.camera)
-//            val canDraw = (renderer as? CanvasRenderer)?.hasCanvas != false
-            val canDraw = (renderer as? SurfaceBackedRenderer)?.hasSurface != false
+            if (surfaceOk) {
+                val t0 = System.nanoTime()
+                // Si tu renderer requiere begin/end, descomenta:
+//                 renderer.begin(scene.camera) //relentiza los fps
 
-            if (canDraw) {
-                val tRen0 = System.nanoTime()
                 renderer.clear(0f, 0f, 0f, 1f)
-                scene.onDraw(renderer, scene.camera)
-                hudManager.draw(renderer, scene.camera)
-                msRender = (System.nanoTime() - tRen0) / 1_000_000f
+                scene.onRender(renderer)
+//                 hudManager.draw(renderer, scene.camera)
+
+                msRender = (System.nanoTime() - t0) / 1_000_000f
                 draws = renderer.drawCallsThisFrame
                 rendered = true
             }
@@ -141,8 +136,12 @@ class CoreEngine private constructor(
             stopRequested = true
             running = false
         } finally {
-            try { renderer.end() } catch (_: Throwable) {}
+            // Llama end() una sola vez si tu renderer lo necesita.
+            try { /* renderer.end() */
+            } catch (_: Throwable) {
+            }
         }
+
 
         // 8) Publicar SIEMPRE
         publish(
@@ -152,70 +151,12 @@ class CoreEngine private constructor(
             msUpd = msUpdate,
             msRen = msRender
         )
+        Debug.i("tick dt=$dt")
     }
 
-
-
-
-    fun createController(): EngineController = EngineController(this)
-
-    @Volatile
-    private var stopRequested = false
-    @Volatile
-    private var paused = false
-    @Volatile
-    private var running = false
-
-    private var frameCount = 0L
-    private var fpsHud: HudLayer? = null
-    private val sampler = FrameStats()
-
-    private val _storeImpl = EngineStoreImpl()
-    val store: EngineStore get() = _storeImpl
-
-    fun start() {
-        if (running) return
-        running = true
-        paused = false
-        stopRequested = false
-        _storeImpl.update { it.copy(running = true) }
-//        loop()
-    }
-
-    fun startBlocking() {
-        if (!running) {
-            running = true
-            paused = false
-            stopRequested = false
-            _storeImpl.update { it.copy(running = true) }
-        }
-        loop() // corre el bucle en el hilo del test
-    }
-
-
-
-    fun stop() {
-        stopRequested = true
-        running = false
-        _storeImpl.update { it.copy(running = false) }
-    }
-
-    fun pause() {
-        paused = true
-        running = false
-        _storeImpl.update { it.copy(running = false) }
-    }
-
-    fun resume() {
-        paused = false
-        running = true
-        _storeImpl.update { it.copy(running = true) }
-    }
-
-    // ---------- helpers de publicación ----------
+    // ---- Publicación de métricas/estado
     private fun sceneKey(): String =
-        sceneManager.current?.toString() ?: (sceneManager.currentFactoryId ?: "boot")
-
+        sceneManager.current?.let { sceneIdOf(it) } ?: (sceneManager.currentFactoryId ?: "boot")
 
     private fun publish(
         frameDraws: Int,
@@ -238,26 +179,16 @@ class CoreEngine private constructor(
                 droppedFrames = dropped
             )
         }
-        (fpsHud as? MetricsSink)?.onTimings(msUpd, msRen, frameDraws)
-
+        // (fpsHud as? MetricsSink)?.onTimings(msUpd, msRen, frameDraws)
     }
 
-    private fun loop() {
+    internal fun runLoop() {
         while (!stopRequested) {
-            val dt = clock.tick()
-            tickFrame(dt)
             if (stopRequested || !running) break
-            clock.sleepToNextFrame()
         }
     }
 
-
-
-    internal fun runLoop() = loop()
-
-    // ------------------------------------------------
-    //                    BUILDER
-    // ------------------------------------------------
+    // ---- Builder
     class Builder {
         var config: EngineConfig = EngineConfig()
         var renderer: Renderer? = null
@@ -267,44 +198,52 @@ class CoreEngine private constructor(
         var logger: Logger = ConsoleLogger()
         var beforeFirstScene: ((CoreEngine) -> Unit)? = null
 
+
+
+
         fun build(): CoreEngine {
             val resourceManager = ResourceManager()
-            val scenes = SceneStack(resourceManager)
+            val scenes = SceneStack()
             val hud = HudManager()
             val input = InputManager()
-            val clock = Clock(config.targetFps)
             val r = renderer ?: error("Renderer requerido (Canvas/GL)")
 
-            val engine =
-                CoreEngine(config, r, scenes, resourceManager, hud, input, clock, fpsHudFactory)
+            val engine = CoreEngine(
+                config = config,
+                renderer = r,
+                sceneManager = scenes,
+                resourceManager = resourceManager,
+                hudManager = hud,
+                inputManager = input,
+                fpsHudFactory = fpsHudFactory
+            )
+
+            scenes.setServices(engine.services)
 
             Debug.logger = logger
 
+            // Reflejar escena y recursos ante cambios
+            scenes.addListener(object : SceneStack.Listener {
+                override fun onSceneChanged(prev: Scene?, next: Scene) {
+                    hud.clear()
+                    engine.ensureFpsHud()
+                    engine._storeImpl.update { st -> st.copy(sceneId = engine.sceneKey()) }
+                    prev?.let { resourceManager.releaseOwnedBy(it.id) }
+                }
+            })
+
+            // Hooks previos a primera escena
+            resourceSetup?.invoke(resourceManager)
+            beforeFirstScene?.invoke(engine)
+            sceneFactory?.let { scenes.replace(it) }
+
+            // Estado inicial
             engine._storeImpl.update {
                 it.copy(
                     sceneId = scenes.current?.let { s -> sceneIdOf(s) } ?: "boot",
                     running = false
                 )
             }
-
-            scenes.addListener(object : SceneStack.Listener {
-                override fun onSceneChanged(prev: Scene?, next: Scene) {
-                    hud.clear()
-                    prev?.provideHud()?.forEach { hud.removeLayer(it) }
-                    next.provideHud().forEach { hud.addLayer(it) }
-                    engine.ensureFpsHud()
-                    // reflejar sceneId usando la clave estable (factoryId preferente)
-                    engine._storeImpl.update { st -> st.copy(sceneId = engine.sceneKey()) }
-                    // liberar recursos por id estable
-                    prev?.let { resourceManager.releaseOwnedBy(it.id) }
-                }
-            })
-
-            // hooks previos a primera escena
-            resourceSetup?.invoke(resourceManager)
-            sceneFactory?.let { scenes.replace(it) }
-
-
             return engine
         }
     }
@@ -316,7 +255,35 @@ class CoreEngine private constructor(
         }
     }
 
-    fun createController(
-        tickerFactory: (Clock) -> Ticker = { c -> ThreadTicker(c) }
-    ): EngineController = EngineController(this, tickerFactory)
+    // ---- Controladores
+    fun createControllerFixedStep(fps: Int = 60): EngineControllerFixedStep =
+        EngineControllerFixedStep(this, fps)
+
+    fun createController(ticker: Ticker): EngineController =
+        EngineController(this, ticker)
+
+    // ---- Arranque/paro bloqueante para tests
+    fun startBlocking() {
+        if (!running) {
+            running = true
+            paused = false
+            stopRequested = false
+            _storeImpl.update { it.copy(running = true) }
+        }
+        runLoop()
+    }
+
+
+    internal fun onControllerStart() {
+        if (running) return
+        running = true
+        paused = false
+        stopRequested = false
+        _storeImpl.update { it.copy(running = true) }
+    }
+
+    internal fun onControllerStop() {
+        running = false
+        _storeImpl.update { it.copy(running = false) }
+    }
 }

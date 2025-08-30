@@ -1,55 +1,74 @@
 # CoreEngine
 
-**CoreEngine** es un motor gráfico 2D **Android-first**, modular, determinista y escalable, desarrollado en **Kotlin** con un pipeline híbrido **Canvas/OpenGL**.  
-Está diseñado siguiendo la **Teoría del TODO (TCD)** de Roberto Ariel Nicolini y las **buenas prácticas de arquitectura de Android**.
+[![Build](https://github.com/coreengine-dev/CoreEngine/actions/workflows/build.yml/badge.svg)](https://github.com/coreengine-dev/CoreEngine/actions/workflows/build.yml)
+[![CI](https://github.com/coreengine-dev/CoreEngine/actions/workflows/ci.yml/badge.svg)](https://github.com/coreengine-dev/CoreEngine/actions/workflows/ci.yml)
+
+**CoreEngine** is a **modular, deterministic 2D/3D graphics engine** built in **Kotlin**, designed for **Android-first integration** but architected for multiplatform scalability.  
+It combines a **hybrid ECS + SceneGraph architecture** with pluggable **Canvas / OpenGL ES backends**, and aligns with the **Theory of Everything (TCD)** by **Roberto Ariel Nicolini** as well as modern **Android architecture guidelines**.
 
 ---
 
-## Características clave
-- **Android-first**: Integración nativa con Compose y Jetpack.
-- **Fidelidad a TCD**: Flujo 𝛂 → 𝜱 → 𝝮 → 𝐌 → 𝚿 → 𝝎 reflejado en el motor.
-- **Arquitectura modular**: Paquetes `org.coreengine.*` y capas limpias.
-- **Loop determinista**: Actualizaciones precisas y sincronizadas.
-- **Motor + IDE unificados**: **CoreStudio**, un IDE multiplataforma con Scene Viewer, Inspector y debugging en tiempo real.
-- **2D optimizado**: Batching avanzado y gestión eficiente de recursos.
-- **Open Source profesional**: Licencia Apache 2.0.
-- **Escalabilidad**: Preparado para Vulkan, WebGPU y export multiplataforma.
+## ✨ Key Features
+- **Android-first**: Seamless integration with Jetpack Compose, ViewModels, and StateFlow.
+- **TCD Fidelity**: Symbolic structural flow `𝛂 → 𝜱 → 𝝮 → 𝐌 → 𝚿 → 𝝎` mapped to engine subsystems:
+    - α (time / loop), Φ (space / camera), Ω− (dynamics), M (render), Ψ (input), ω (metrics).
+- **Deterministic Loop**: VSync-aligned, predictable frame processing.
+- **Clean Modular Architecture**: Stable ABI/API under `org.coreengine.*` (SemVer 1.x).
+- **Rendering Backends**: `CanvasRenderer` and `GLSurfaceRenderer` with Surface support.
+- **Resource Management**: Modular, scene-scoped, reference-counted.
+- **HUD System**: Hybrid overlays (Android Views + engine HUD layers).
+- **CoreStudio IDE**: IntelliJ-based plugin for SceneGraph editing, Inspector, Viewport, Profiler, and Hot Reload.
+- **Future-proof**: Prepared for Vulkan (2027+), WebGPU export, and QuantumFields plugin.
+- **Open Source**: Apache 2.0 License with explicit recognition of Roberto Ariel Nicolini’s legacy.
 
 ---
 
-## Roadmap
-| Ciclo | Objetivo | Estado |
-|--------|----------|--------|
-| **1** | Núcleo funcional y web básica | 🚧 En desarrollo |
-| **2** | Recursos y render inicial | ⏳ Pendiente |
-| **3** | ECS-lite y optimización básica | ⏳ Pendiente |
-| **4** | IDE multiplataforma (beta) | ⏳ Pendiente |
-| **5** | Perfilado avanzado y escalabilidad | ⏳ Pendiente |
-| **6** | Versión **1.0** estable con IDE completo | 🎯 3 de junio de 2027 |
+## 📅 Roadmap (2025–2027)
+
+| Phase | Goal | Status |
+|-------|------|--------|
+| **1** | Stable core runtime, scene stack, deterministic loop | ✅ Completed |
+| **2** | Canvas renderer + modular resource manager | ✅ Completed |
+| **3** | Advanced OpenGL pipeline, ECS-lite integration | 🚧 In progress |
+| **4** | CoreStudio IDE (SceneGraph editor, viewport, hot reload) | ⏳ Pending |
+| **5** | Profiler, multi-tasking, advanced HUD metrics | ⏳ Pending |
+| **6** | Documentation + WebGL demos | ⏳ Pending |
+| **7+** | QuantumFields module + Vulkan transition | 🎯 Target: 2027 |
 
 ---
 
-## Documentación
-La documentación oficial estará disponible en la web: **[coreengine.dev](https://coreengine.dev)** *(en construcción)*.
+## 📖 Documentation
+- **Architecture**: see [ARCHITECTURE.md](./ARCHITECTURE.md)
+- **Testing Strategy**: see [TESTING.md](./TESTING.md)
+- **Benchmarks & Metrics**: see [BENCHMARKS.md](./BENCHMARKS.md)
+- **Validation Checklist**: aligned with [Prompt Maestro](./PROMPT_MAESTRO.md)
+
+Official website (under construction): **[coreengine.dev](https://coreengine.dev)**
 
 ---
 
-## Licencia
-Este proyecto se distribuye bajo la licencia **Apache 2.0**.  
-Consulta el archivo [LICENSE](./LICENSE) para más detalles.
+## ⚖️ License
+This project is licensed under the **Apache 2.0 License**, with an additional non-patentability clause honoring **Roberto Ariel Nicolini**.  
+See [LICENSE](./LICENSE) and [NOTICE](./NOTICE) for details.
 
 ---
 
-## Contribuciones
-CoreEngine es **open source**.
-- Reporta problemas en **Issues**.
-- Envía PRs con mejoras.
-- Únete al desarrollo de **CoreStudio** y ayuda a construir el futuro del motor.
+## 🤝 Contributing
+CoreEngine is **open source and community-driven**:
+- Report issues via **GitHub Issues**.
+- Submit **Pull Requests** following [CONTRIBUTING.md](./CONTRIBUTING.md).
+- Respect community rules in [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md).
+- Join the development of **CoreStudio** and the validation of **TCD scenes**.
 
 ---
 
-## Meta 2027
-El **3 de junio de 2027**, CoreEngine lanzará su versión **1.0**, con:
-- Motor estable y optimizado.
-- IDE profesional (**CoreStudio**) integrado.
-- Demos, documentación y comunidad activa.
+## 🚀 Vision 2027
+On **June 3rd, 2027**, CoreEngine will reach **v1.0** with:
+- A stable, optimized runtime and GL/Vulkan backends.
+- **CoreStudio IDE** with Scene Viewer, Inspector, Profiler, and Hot Reload.
+- Complete documentation, benchmarks, and WebGL demos.
+- Integration of **QuantumFields** for advanced physics simulation.
+
+---
+
+🔗 Repository: [github.com/coreengine-dev/CoreEngine](https://github.com/coreengine-dev/CoreEngine)

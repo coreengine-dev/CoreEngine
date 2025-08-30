@@ -19,9 +19,10 @@
 // Rol TCD: 𝝮→𝝎 (control + señal de eventos)
 // No modifica tu Scene. Se invoca desde el loop del Engine/AppController.
 // ─────────────────────────────────────────────────
-package api.coreengine.runtime.engine.metrics
+package org.coreengine.runtime.engine.metrics
 
-import org.coreengine.scene.SceneManifest
+import org.coreengine.api.scene.SceneManifest
+
 
 class BudgetEnforcer(val manifest: SceneManifest) {
     private var overFrames = 0

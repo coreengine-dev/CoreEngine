@@ -18,7 +18,7 @@
 // Archivo: org/coreengine/engine/metrics/FrameMetrics.kt
 // Rol TCD: 𝛂 (medición de dt) + 𝝎 (snapshot del tick)
 // ─────────────────────────────────────────────────
-package api.coreengine.runtime.engine.metrics
+package org.coreengine.runtime.engine.metrics
 
 data class FrameMetrics(
     val frame: Long,

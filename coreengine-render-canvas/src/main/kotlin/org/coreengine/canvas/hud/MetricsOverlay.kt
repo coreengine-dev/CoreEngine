@@ -19,9 +19,9 @@
 // Rol TCD: 𝐌 (render de estado) + 𝝎 (alertas visuales)
 // NOTA: Usa TU clase Text exacta. No creamos otra.
 // ─────────────────────────────────────────────────
-package org.coreengine.render.canvas.hud
+package org.coreengine.canvas.hud
 
-import org.coreengine.engine.metrics.FrameMetrics
+import android.view.FrameMetrics
 
 
 class Text(){
@@ -30,6 +30,7 @@ class Text(){
     val charactersMaximum: Int get() = 0
 }
 
+/*
 class MetricsOverlay(private val textNode: Text) {
     enum class Level { GREEN, YELLOW, RED }
     var enabled: Boolean = true
@@ -52,4 +53,4 @@ class MetricsOverlay(private val textNode: Text) {
         textNode.setCharactersToDraw(safe.length)
     }
 
-}
+}*/

@@ -1,0 +1,15 @@
+name: Changelog Check
+on: [pull_request]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fail if src changed but changelog not updated
+        run: |
+          git fetch origin ${{ github.base_ref }} --depth=1
+          changed=$(git diff --name-only origin/${{ github.base_ref }}... | grep -E '^(coreengine-|samples/|build\.gradle|settings\.gradle|gradle\.properties)' || true)
+          touched_changelog=$(git diff --name-only origin/${{ github.base_ref }}... | grep -E '^CHANGELOG\.md$' || true)
+          if [ -n "$changed" ] && [ -z "$touched_changelog" ]; then
+            echo "Source changed but CHANGELOG.md not updated"; exit 1
+          fi

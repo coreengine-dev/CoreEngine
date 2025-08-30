@@ -7,6 +7,7 @@ plugins {
 android {
     namespace = "org.coreengine.demo"
     compileSdk = 36
+    lint { abortOnError = false }
 
     defaultConfig {
         applicationId = "org.coreengine.demo"
@@ -14,9 +15,7 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "0.1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
     }
 
     buildTypes {
@@ -29,40 +28,37 @@ android {
         }
     }
 
-    buildFeatures {
-        compose = true
-    }
+    buildFeatures { compose = true }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = "17"
-    }
+    kotlinOptions { jvmTarget = "17" }
+
+
+    packaging { resources { excludes += "/META-INF/{AL2.0,LGPL2.1}" } }
+
 }
 
 dependencies {
-    implementation(project(":engine"))
+    implementation(project(":coreengine-api"))
+    implementation(project(":coreengine-runtime"))
+    implementation(project(":coreengine-android-host"))
+    implementation(project(":coreengine-render-canvas"))
 
-    // AndroidX base
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
 
-    // Layouts y navegación
-    implementation(libs.androidx.coordinatorlayout)
-    implementation(libs.androidx.viewpager2)
-
-    // Testing
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-
-    // Compose: usa BOM
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.ui)
     implementation(libs.androidx.foundation)
     implementation(libs.androidx.material3)
+
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
 }

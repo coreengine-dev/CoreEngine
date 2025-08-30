@@ -36,7 +36,8 @@ class AndroidHostBridge(
     val activity: Activity,
     /** Contenedor del overlay de UI sobre la Surface. */
     private val overlayContainer: FrameLayout
-) : HostBridge {
+) : HostBridge
+{
 
     /** Exposición de solo lectura del overlay (p.ej. para HudAndroidLayer). */
     val overlayLayer: FrameLayout
@@ -48,23 +49,29 @@ class AndroidHostBridge(
     // Implementación de UiOverlay consumida por el core a través de HostBridge.overlay
     private val overlayImpl = object : UiOverlay {
         override fun add(id: String, build: () -> Any) {
-            // build() devuelve Pair<View, LayoutParams> en nuestras extensiones
             main.post {
-                val (v, lp) = build() as Pair<View, FrameLayout.LayoutParams>
-                v.tag = id
-                remove(id) // idempotente por id
-                overlayContainer.addView(v, lp)
+                val any = build()
+                val pair = any as? Pair<*, *>
+                    ?: error("overlay builder must return Pair<View, FrameLayout.LayoutParams>")
+
+                val view = pair.first as? View
+                    ?: error("first must be android.view.View")
+                val lp = pair.second as? FrameLayout.LayoutParams
+                    ?: error("second must be FrameLayout.LayoutParams")
+
+                view.tag = id
+                remove(id) // idempotente
+                overlayContainer.addView(view, lp)
             }
         }
         override fun remove(id: String) {
             main.post {
-                overlayContainer.children().firstOrNull { it.tag == id }?.let { overlayContainer.removeView(it) }
+                overlayContainer.children().firstOrNull { it.tag == id }?.let(overlayContainer::removeView)
             }
         }
-        override fun clear() {
-            main.post { overlayContainer.removeAllViews() }
-        }
+        override fun clear() { main.post { overlayContainer.removeAllViews() } }
     }
+
 
     /** Interfaz neutra que ve el core. */
     override val overlay: UiOverlay get() = overlayImpl

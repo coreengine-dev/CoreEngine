@@ -1,56 +1,61 @@
 # CoreEngine Manifesto
 
-## 1. Esencia
-CoreEngine no es solo un motor.  
-Es el **punto de encuentro entre ingeniería, teoría y creatividad**, construido sobre la visión **𝛂 → 𝜱 → 𝝮 → 𝐌 → 𝚿 → 𝝎** de la **Teoría del TODO (TCD)**.
+## 1. Essence
+CoreEngine is not just a graphics engine.  
+It is the **meeting point between engineering, theory, and creativity**, shaped by the vision **𝛂 → 𝜱 → 𝝮 → 𝐌 → 𝚿 → 𝝎** from the **Theory of Everything (TCD)**.
 
 ---
 
-## 2. Principios
+## 2. Principles
 
 ### Android-first
-Integración nativa con Android, Compose y Jetpack, con APIs idiomáticas en Kotlin.
+Native integration with Android, Compose, and Jetpack, with idiomatic Kotlin APIs.
 
-### Fidelidad a la TCD
-Cada fase del motor está alineada con el flujo teórico:
-- **𝛂 (Tiempo):** Loop determinista, scheduler estable.
-- **𝜱 (Espacio):** Cámaras, proyecciones y transformaciones.
-- **𝝮 (Dinámica):** Sistemas de actualización y física.
-- **𝐌 (Manifestación):** Renderización precisa y optimizada.
-- **𝚿 (Conciencia):** Input inteligente y adaptable.
-- **𝝎 (Registro):** Logging, métricas y snapshots.
+### Fidelity to TCD
+Every subsystem aligns with the theoretical flow:
+- **𝛂 (Time):** Deterministic loop, stable scheduler.
+- **𝜱 (Space):** Cameras, projections, transformations.
+- **𝝮 (Dynamics):** Update systems and physics.
+- **𝐌 (Manifestation):** Accurate, optimized rendering.
+- **𝚿 (Consciousness):** Intelligent and adaptive input.
+- **𝝎 (Record):** Logging, metrics, and snapshots.
 
-### Arquitectura modular y limpia
-Basada en paquetes `org.coreengine.*`, siguiendo los principios de Clean Architecture y UDF.
+### Modular and clean architecture
+Based on `org.coreengine.*` packages, following Clean Architecture and UDF principles.
 
-### Motor + IDE unificados
-Desarrollo potenciado por **CoreStudio**, nuestro IDE multiplataforma con Scene Viewer, Inspector en tiempo real y debugging sincronizado.
+### Engine + IDE unification
+Development powered by **CoreStudio**, a multiplatform IDE with Scene Viewer, real-time Inspector, and synchronized debugging.
 
-### Iteración incremental
-Cada versión es funcional, usable y validada por la comunidad antes de avanzar.
+### Incremental iteration
+Each release is functional, usable, and validated by the community before moving forward.
 
-### 2D de alto rendimiento
-Híbrido Canvas/GL con batching avanzado y optimización de recursos.
+### High-performance 2D
+Hybrid Canvas/OpenGL pipeline with batching and efficient resource management.
 
-### Open Source profesional
-Licencia Apache 2.0, con documentación clara, ejemplos prácticos y una comunidad abierta.
+### Professional Open Source
+Apache 2.0 license, with clear documentation, practical examples, and an open community.
 
-### Escalabilidad y compatibilidad
-Preparado para evolución hacia Vulkan, WebGPU, scripting dinámico y export multiplataforma.
-
----
-
-## 3. Compromiso
-CoreEngine es un proyecto **de programadores para programadores**, libre de dependencias cerradas y guiado por:
-- Transparencia
-- Innovación
-- Respeto por la comunidad y la visión teórica que lo inspira
+### Scalability and future compatibility
+Prepared for Vulkan, WebGPU, dynamic scripting, and multiplatform export.
 
 ---
 
-## 4. Meta 2027
-Para el **3 de junio de 2027**, CoreEngine será:
-- Un motor estable en versión **1.0**
-- Con un IDE profesional (**CoreStudio**)
-- Documentación completa, demos interactivas y una web oficial activa
-- Un ecosistema listo para crecer sin romper su esencia
+## 3. Commitment
+CoreEngine is a project **by developers for developers**, free of closed dependencies and guided by:
+- Transparency
+- Innovation
+- Respect for community and the theory that inspires it
+
+---
+
+## 4. Road to 2027
+By **June 3rd, 2027**, CoreEngine will deliver:
+- A stable **1.0 engine release**
+- A professional IDE (**CoreStudio**)
+- Full documentation, interactive demos, and an active official website
+- An ecosystem ready to evolve without breaking its essence
+
+---
+
+⚡️ This Manifesto defines the **Phase 1 foundation** we are currently building:  
+a functional, modular, Android-first 2D engine with a clean loop and hybrid rendering pipeline.  

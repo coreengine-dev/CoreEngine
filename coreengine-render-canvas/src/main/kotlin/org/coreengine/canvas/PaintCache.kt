@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.coreengine.render.canvas
+package org.coreengine.canvas
 
 import android.graphics.Paint
 

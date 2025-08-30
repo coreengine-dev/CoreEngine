@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package org.coreengine.render.canvas.hud
+package org.coreengine.canvas.hud
 
-import org.coreengine.camera.Camera
-import org.coreengine.input.InputEvent
-import org.coreengine.render.Renderer
+import org.coreengine.api.camera.Camera
+import org.coreengine.api.input.InputEvent
+import org.coreengine.api.render.Renderer
 
 /**
  * HudManager — Gestiona HUDs superpuestos a la escena.
@@ -30,21 +30,21 @@ import org.coreengine.render.Renderer
  * TCD: capa de retroalimentación perceptual → 𝐌 visible,
  *      pero intercepta 𝚿 (input) antes de ∇ (update).
  */
-class HudManager {
+/*class HudManager {
 
     private val layers: MutableList<HudLayer> = mutableListOf()
 
-    /** Añadir una capa HUD (ej: UI, overlay debug). */
+    *//** Añadir una capa HUD (ej: UI, overlay debug). *//*
     fun addLayer(layer: HudLayer) {
         layers.add(layer)
     }
 
-    /** Eliminar capa HUD. */
+    *//** Eliminar capa HUD. *//*
     fun removeLayer(layer: HudLayer) {
         layers.remove(layer)
     }
 
-    /** Dibujar todas las capas HUD (encima de la escena). */
+    *//** Dibujar todas las capas HUD (encima de la escena). *//*
     fun draw(renderer: Renderer, camera: Camera) {
         layers
             .filter { it.visible }
@@ -53,7 +53,7 @@ class HudManager {
     }
 
 
-    /** Pasar input a las capas (prioridad sobre escena). */
+    *//** Pasar input a las capas (prioridad sobre escena). *//*
     fun onInput(ev: InputEvent): Boolean {
         for (layer in layers.reversed()) { // el último HUD agregado está "encima"
             if (layer.onInput(ev)) return true
@@ -66,6 +66,6 @@ class HudManager {
         if (layers.none { it === layer }) layers.add(layer)
     }
 
-}
+}*/
 
 

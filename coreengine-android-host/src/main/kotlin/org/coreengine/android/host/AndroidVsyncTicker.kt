@@ -16,38 +16,46 @@
 
 package org.coreengine.android.host
 
+import android.os.Handler
+import android.os.Looper
 import android.view.Choreographer
-import org.coreengine.time.TickCallback
-import org.coreengine.time.Ticker
+import org.coreengine.api.time.Ticker
+import org.coreengine.runtime.time.TickCallback
 
 class AndroidVsyncTicker : Ticker, Choreographer.FrameCallback {
-    private val ch = Choreographer.getInstance()
-    private var last = 0L
-    private var cb: TickCallback? = null
     @Volatile override var isRunning: Boolean = false
         private set
 
-    override fun start(cb: TickCallback) {
+    private var onTick: ((Float) -> Unit)? = null
+    private var lastNs = 0L
+
+    override fun start(loop: (Float) -> Unit) {
         if (isRunning) return
-        this.cb = cb
         isRunning = true
-        last = 0L
-        ch.postFrameCallback(this)
+        onTick = loop
+        lastNs = 0L
+        if (Looper.myLooper() == Looper.getMainLooper())
+            Choreographer.getInstance().postFrameCallback(this)
+        else
+            Handler(Looper.getMainLooper()).post {
+                Choreographer.getInstance().postFrameCallback(this)
+            }
     }
 
-    override fun doFrame(t: Long) {
+    override fun doFrame(frameTimeNanos: Long) {
         if (!isRunning) return
-        if (last == 0L) last = t
-        val dt = ((t - last) / 1_000_000_000.0).toFloat().coerceAtMost(0.1f)
-        last = t
-        cb?.onTick(dt)
-        ch.postFrameCallback(this)
+        val dt = if (lastNs == 0L) 1f/60f
+        else ((frameTimeNanos - lastNs) / 1_000_000_000f).coerceIn(1f/240f, 1f/30f)
+        lastNs = frameTimeNanos
+        onTick?.invoke(dt)
+        Choreographer.getInstance().postFrameCallback(this)
     }
 
     override fun stop() {
         if (!isRunning) return
         isRunning = false
-        ch.removeFrameCallback(this)
-        cb = null
+        onTick = null
+        Choreographer.getInstance().removeFrameCallback(this)
     }
 }
+

@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package org.coreengine.render.canvas.ui
+package org.coreengine.canvas.ui
 
 
 import android.graphics.Color
-import org.coreengine.entity.Entity
-import org.coreengine.camera.Camera
-import org.coreengine.render.Renderer
-import org.coreengine.render.canvas.CanvasRenderer
-import org.coreengine.render.canvas.PaintCache
+import org.coreengine.api.camera.Camera
+import org.coreengine.api.entity.Entity
+import org.coreengine.api.render.Renderer
+import org.coreengine.canvas.CanvasRenderer
+import org.coreengine.canvas.PaintCache
 
 // core/ui/ButtonRect.kt
 class ButtonRect(
@@ -30,7 +30,7 @@ class ButtonRect(
     var text: String = "Button",
     var bgColor: Int = Color.WHITE,
     var fgColor: Int = Color.BLACK,
-) : Entity() {
+){}/* : Entity() {
 
     private val bg = PaintCache.solid(bgColor).apply { isAntiAlias = true }
     private val fg = PaintCache.solid(fgColor).apply {
@@ -50,3 +50,5 @@ class ButtonRect(
         super.onDraw(renderer, camera)
     }
 }
+
+        */

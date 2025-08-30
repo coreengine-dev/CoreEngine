@@ -30,11 +30,93 @@
  * - Hit-test básico (rects) y extensible (custom entity).
  */
 
-// input/InputManager.kt
-package api.coreengine.runtime.input
+package org.coreengine.runtime.input
 
-import org.coreengine.hud.HudManager
-import org.coreengine.scene.Scene
+import org.coreengine.api.input.InputEvent
+import org.coreengine.api.scene.Scene
+import org.coreengine.runtime.engine.HudManager
+import java.util.ArrayDeque
+import java.util.concurrent.atomic.AtomicReference
+
+/**
+ * InputManager en runtime.
+ * - Cola FIFO de eventos.
+ * - Enruta primero a HUD (front-most), luego a Scene.onInput(event).
+ * - Soporta conversión opcional pantalla→mundo mediante un mapper.
+ */
+class InputManager {
+
+    /** Mapper opcional: (sx,sy) de pantalla → (x,y) en mundo. */
+    fun interface CoordMapper { fun map(sx: Float, sy: Float): Pair<Float, Float> }
+
+    private val mapperRef = AtomicReference<CoordMapper?>(null)
+    private val queue = ArrayDeque<InputEvent>()
+
+    /** Define o limpia el mapper de coordenadas. */
+    fun setCoordMapper(mapper: CoordMapper?) { mapperRef.set(mapper) }
+
+    /** Limpia la cola. */
+    fun clear() { synchronized(queue) { queue.clear() } }
+
+    /** Publica un evento ya en coordenadas de mundo. */
+    fun post(event: InputEvent) {
+        synchronized(queue) { queue.addLast(event) }
+    }
+
+    /** Helpers para publicar eventos en coords de pantalla; aplica mapper si existe. */
+    fun postScreenDown(sx: Float, sy: Float, id: Int = 0) = post(mapIfNeeded(InputEvent.Down(sx, sy, id)))
+    fun postScreenMove(sx: Float, sy: Float, id: Int = 0) = post(mapIfNeeded(InputEvent.Move(sx, sy, id)))
+    fun postScreenUp  (sx: Float, sy: Float, id: Int = 0) = post(mapIfNeeded(InputEvent.Up  (sx, sy, id)))
+
+    private fun mapIfNeeded(ev: InputEvent): InputEvent {
+        val m = mapperRef.get() ?: return ev
+        return when (ev) {
+            is InputEvent.Down -> {
+                val (x,y) = m.map(ev.x, ev.y); InputEvent.Down(x,y,ev.id)
+            }
+            is InputEvent.Move -> {
+                val (x,y) = m.map(ev.x, ev.y); InputEvent.Move(x,y,ev.id)
+            }
+            is InputEvent.Up -> {
+                val (x,y) = m.map(ev.x, ev.y); InputEvent.Up(x,y,ev.id)
+            }
+        }
+
+    }
+
+    /**
+     * Enruta todos los eventos pendientes.
+     * Orden: HUD (capas visibles de mayor a menor z) → Scene.onInput(event).
+     */
+    fun dispatch(hud: HudManager, scene: Scene) {
+        while (true) {
+            val ev = synchronized(queue) { if (queue.isEmpty()) null else queue.removeFirst() } ?: break
+
+            // HUD primero
+            val consumedByHud = hud.provideHud()
+                .asReversed()               // último agregado arriba
+                .sortedBy { it.zIndex }     // z ascendente, luego invertimos arriba
+                .asReversed()
+                .any { it.visible && it.onInput(ev) }
+            if (consumedByHud) continue
+
+            // Luego escena
+            scene.onInput(ev)
+        }
+    }
+}
+
+
+
+
+/*
+// input/InputManager.kt
+package org.coreengine.runtime.input
+
+import org.coreengine.api.input.Action
+import org.coreengine.api.input.InputEvent
+import org.coreengine.api.scene.Scene
+import org.coreengine.runtime.engine.HudManager
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.atomic.AtomicBoolean
@@ -204,3 +286,5 @@ interface Clickable {
     fun setOnClickListener(listener: (() -> Unit)?)
 }
 
+
+ */

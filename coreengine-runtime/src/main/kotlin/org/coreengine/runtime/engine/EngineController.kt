@@ -14,31 +14,48 @@
  * limitations under the License.
  */
 
-package api.coreengine.runtime.engine
 
-import org.coreengine.time.*
+package org.coreengine.runtime.engine
 
-class EngineController internal constructor(
+import org.coreengine.api.time.Ticker
+import org.coreengine.runtime.util.Debug
+
+class EngineController(
     private val engine: CoreEngine,
-    private val tickerFactory: (Clock) -> Ticker = { c -> ThreadTicker(c) } // default JVM
+    private val ticker: Ticker
 ) {
-    @Volatile private var ticker: Ticker? = null
+    val isRunning get() = ticker.isRunning
+    var onSample: ((FrameSample) -> Unit)? = null
 
-    @Synchronized fun start() {
-        if (ticker?.isRunning == true) return
-        engine.start()
-        val t = tickerFactory(engine.clock)
-        t.start { dt -> engine.tickFrame(dt) }
-        ticker = t
+    fun start() {
+        Debug.i("EngineController.start")
+        engine.onControllerStart()
+        ticker.start { dt -> loop(dt) }   // <-- antes llamabas engine.tickFrame(dt)
     }
 
-    @Synchronized fun stop() {
-        ticker?.stop()
-        ticker = null
-        engine.stop()
+    fun stop() {
+        ticker.stop()
+        engine.onControllerStop()
     }
 
-    fun pause()  = engine.pause()
-    fun resume() = engine.resume()
-    val isAlive: Boolean get() = ticker?.isRunning == true
+    data class FrameSample(val fps: Int, val draws: Int, val msUpdate: Int, val msRender: Int)
+
+    private var accT = 0f;
+    private var accF = 0
+    private var lastDraws = 0;
+    private var msUpd = 0;
+    private var msRen = 0
+
+    private fun loop(dt: Float) {
+        val t0 = System.nanoTime()
+        engine.tickFrame(dt)
+        msUpd = ((System.nanoTime() - t0) / 1_000_000).toInt()
+        lastDraws = engine.renderer.drawCallsThisFrame
+        accT += dt; accF++
+        if (accT >= 1f) {
+            onSample?.invoke(FrameSample(accF, lastDraws, msUpd, msRen))
+            accT = 0f; accF = 0
+        }
+    }
 }
+

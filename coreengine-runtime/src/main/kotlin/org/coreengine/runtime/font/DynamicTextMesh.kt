@@ -20,7 +20,7 @@
 // Sustituye SOLO el backend interno de tu Text para evitar OOB.
 // Mantén tu API pública de Text.
 // ─────────────────────────────────────────────────
-package api.coreengine.runtime.font
+package org.coreengine.runtime.font
 
 class DynamicTextMesh(initialCap: Int = 128) {
     private var cap = if (initialCap < 16) 16 else initialCap

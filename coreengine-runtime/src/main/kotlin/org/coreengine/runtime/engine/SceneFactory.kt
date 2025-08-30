@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package api.coreengine.runtime.engine
+package org.coreengine.runtime.engine
 
-import org.coreengine.scene.Scene
+import org.coreengine.api.scene.Scene
+
 
 /**
  * Fábrica de escenas para navegación y diferir construcción.
@@ -24,7 +25,11 @@ import org.coreengine.scene.Scene
  *  * Se añade 'id' por defecto (no abstracto) para identificar la escena.
  */
 
-fun interface SceneFactory {
+
+/*fun interface SceneFactory {
     fun create(): Scene
     val id: String get() = this::class.java.name
-}
+}*/
+fun SceneFactory.id(): String = this::class.java.simpleName
+
+typealias SceneFactory = () -> Scene

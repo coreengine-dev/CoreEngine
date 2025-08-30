@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-package api.coreengine.runtime.engine
+package org.coreengine.runtime.engine
 
-import org.coreengine.resource.ResourceManager
-import org.coreengine.scene.Scene
 
 /**
  * Pila de escenas: push/pop/replace.
@@ -25,73 +23,132 @@ import org.coreengine.scene.Scene
  * TCD: organiza estados estructurales entre ticks.
  */
 
-class SceneStack(private val resources: ResourceManager) {
 
+import org.coreengine.api.resource.EngineServices
+import org.coreengine.api.scene.Scene
+
+
+class SceneStack(
+    private var services: EngineServices? = null
+) {
     interface Listener { fun onSceneChanged(prev: Scene?, next: Scene) }
 
     private val listeners = mutableListOf<Listener>()
+    private val backstack = ArrayDeque<Entry>()
+    private var switching = false
+
+    var current: Scene? = null
+        private set
+
+    var currentFactoryId: String? = null
+        private set
+
+    fun setServices(s: EngineServices) { services = s }
+
+    fun set(factory: SceneFactory, factoryId: String? = null) {
+        if (switching) return
+        switching = true
+        try {
+            val next = factory()
+            val id = factoryId ?: next.id.ifEmpty { next::class.java.name }
+
+            // activar inicial
+            current = next
+            currentFactoryId = id
+            safeCreateResources(next)
+            safeCreate(next)
+            notifyChange(null, next)
+        } finally { switching = false }
+    }
+
+    fun replace(factory: SceneFactory, factoryId: String? = null) {
+        if (switching) return
+        switching = true
+        try {
+            val prev = current
+            val next = factory()
+            val id = factoryId ?: next.id.ifEmpty { next::class.java.name }
+
+            // destruir anterior
+            safeDestroy(prev)
+
+            // activar nueva
+            current = next
+            currentFactoryId = id
+            safeCreateResources(next)
+            safeCreate(next)
+            notifyChange(prev, next)
+        } finally { switching = false }
+    }
+
+    fun push(factory: SceneFactory, factoryId: String? = null) {
+        if (switching) return
+        switching = true
+        try {
+            current?.let { backstack.addLast(Entry(it, currentFactoryId)) }
+
+            val next = factory()
+            val id = factoryId ?: next.id.ifEmpty { next::class.java.name }
+
+            current = next
+            currentFactoryId = id
+            safeCreateResources(next)
+            safeCreate(next)
+            notifyChange(backstack.lastOrNull()?.scene, next)
+        } finally { switching = false }
+    }
+
+    /** Vuelve a la escena anterior. Devuelve true si hubo pop. */
+    fun pop(): Boolean {
+        if (switching || backstack.isEmpty()) return false
+        switching = true
+        try {
+            val prev = current
+            val (restore, id) = backstack.removeLast()
+
+            // destruir la actual
+            safeDestroy(prev)
+
+            // restaurar la anterior (ya creada previamente)
+            current = restore
+            currentFactoryId = id
+            notifyChange(prev, restore)
+            return true
+        } finally { switching = false }
+    }
+
+    fun clear() {
+        val prev = current
+        current = null
+        currentFactoryId = null
+        backstack.asReversed().forEach { safeDestroy(it.scene) }
+        backstack.clear()
+        safeDestroy(prev)
+        if (prev != null) notifyChange(prev, prev) // señal de limpieza
+    }
+
     fun addListener(l: Listener) { listeners += l }
     fun removeListener(l: Listener) { listeners -= l }
 
-    private val stack = ArrayDeque<Scene>()
-    val current: Scene? get() = stack.lastOrNull()
+    val backstackSize: Int get() = backstack.size
 
+    // ---- helpers ----
+    private data class Entry(val scene: Scene, val id: String?)
 
-    private var _currentFactoryId: String? = null
-    // Identificador de la fábrica de la escena actual.
-    val currentFactoryId: String? get() = _currentFactoryId
-
-
-    fun setScene(scene: Scene) {
-        val prev = current
-        //  libera recursos “owned” por la escena saliente
-        prev?.let { resources.releaseOwnedBy(it.id) }
-        prev?.onDestroy()
-        stack.clear()
-        // precarga ANTES de onCreate()
-        scene.onCreateResources(resources)
-        stack.add(scene)
-        scene.onCreate()
-        listeners.forEach { it.onSceneChanged(prev, scene) }
-
+    private fun safeCreateResources(s: Scene?) {
+        val sv = services ?: return
+        try { s?.onCreateResources(sv) } catch (_: Throwable) {}
     }
-
-
-    fun replace(factory: SceneFactory): Scene {
-        val prev = current
-        prev?.let { resources.releaseOwnedBy(it.id) }
-        prev?.onDestroy()
-
-        val next = factory.create()
-        stack.clear()
-        stack.add(next)
-        next.onCreateResources(resources)
-        next.onCreate()
-
-        _currentFactoryId = factory.id
-        listeners.forEach { it.onSceneChanged(prev, next) }
-        return next
+    private fun safeCreate(s: Scene?) {
+        try { s?.onCreate() } catch (_: Throwable) {}
     }
-
-
-    fun push(factory: SceneFactory): Scene {
-        val next = factory.create()
-        stack.add(next)
-        next.onCreateResources(resources)
-        next.onCreate()
-        listeners.forEach { it.onSceneChanged(stack.dropLast(1).lastOrNull(), next) }
-        return next
+    private fun safeDestroy(s: Scene?) {
+        try { s?.onDestroy() } catch (_: Throwable) {}
     }
-
-    fun pop(): Boolean {
-        if (stack.size <= 1) return false
-        val removed = stack.removeLast()
-        removed.onDestroy()
-        resources.releaseOwnedBy(removed.id)
-        current?.let { cur -> listeners.forEach { it.onSceneChanged(removed, cur) } }
-        return true
+    private fun notifyChange(prev: Scene?, next: Scene) {
+        listeners.toList().forEach { l ->
+            try { l.onSceneChanged(prev, next) } catch (_: Throwable) {}
+        }
     }
-
-    // Alias
-    fun getCurrentScene(): Scene? = current
 }
+

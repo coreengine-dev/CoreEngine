@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package org.coreengine.render.canvas
+package org.coreengine.canvas
 
 import android.graphics.Paint
-import org.coreengine.engine.metrics.FrameMetrics
 
+/*
 class MetricsOverlayCanvas {
     enum class Level { GREEN, YELLOW, RED }
 
@@ -44,4 +44,4 @@ class MetricsOverlayCanvas {
         r.drawText(line1, x, y, paint)
         r.drawText(line2, x, y + paint.textSize + 4f, paint)
     }
-}
+}*/

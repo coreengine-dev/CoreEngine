@@ -19,7 +19,7 @@
 // Rol TCD: 𝝎 (foto inmutable del tick para diagnóstico)
 // No interfiere con tus tipos StructureState: conviven.
 // ─────────────────────────────────────────────────
-package api.coreengine.runtime.state
+package org.coreengine.runtime.state
 
 /**
  * Snapshot ligero del estado visible del motor.

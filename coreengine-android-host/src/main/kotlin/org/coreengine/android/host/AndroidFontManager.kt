@@ -17,6 +17,6 @@
 package org.coreengine.android.host
 
 import android.app.Application
-import org.coreengine.resource.FontManager
+import org.coreengine.api.resource.FontManager
 
 class AndroidFontManager(app: Application) : FontManager

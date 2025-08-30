@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 
-package api.coreengine.runtime.time
+package org.coreengine.runtime.time
 
 fun interface TickCallback { fun onTick(dt: Float) }

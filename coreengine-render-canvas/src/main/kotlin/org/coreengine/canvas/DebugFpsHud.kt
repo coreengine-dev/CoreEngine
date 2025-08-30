@@ -14,13 +14,10 @@
  * limitations under the License.
  */
 
-package org.coreengine.render.canvas
+package org.coreengine.canvas
 
 import android.graphics.Paint
-import org.coreengine.camera.Camera
-import org.coreengine.engine.EngineBootstrap
-import org.coreengine.render.canvas.hud.HudLayer
-import org.coreengine.render.Renderer
+import org.coreengine.api.render.Renderer
 
 // time/FrameStats ya existe
 // scene/DebugFpsHud.kt
@@ -30,10 +27,14 @@ interface FpsHud {
 }
 
 // hud/DebugFpsHud.kt  (Android-only)
-class DebugFpsHud(
+/*class DebugFpsHud(
     private val bootstrap: EngineBootstrap,              // referencia al motor de métricas
     private val overlay: MetricsOverlayCanvas            // overlay preparado para texto Canvas
-) : HudLayer(), FpsHud {
+) : HudLayer(), FpsHud
+{
+
+    override var visible: Boolean = true
+    override var zIndex: Int = Int.MAX_VALUE
 
     private val paint = Paint().apply {
         color = 0xFFFFFFFF.toInt()
@@ -48,7 +49,7 @@ class DebugFpsHud(
         fps = v
     }
 
-    override fun onDraw(r: Renderer, c: Camera) {
+    override fun onDraw(r: Renderer) {
         val canvasRenderer = r as? CanvasRenderer ?: return
 
         // calcular delta time
@@ -65,5 +66,5 @@ class DebugFpsHud(
         // métricas extendidas
         overlay.draw(canvasRenderer, paint, 8f, 28f + paint.textSize + 6f)
     }
-}
+}*/
 

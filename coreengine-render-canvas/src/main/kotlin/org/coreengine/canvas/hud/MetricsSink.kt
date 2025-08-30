@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.coreengine.render.canvas.hud
+package org.coreengine.canvas.hud
 
 interface MetricsSink {
     fun onTimings(msUpdate: Float, msRender: Float, drawCalls: Int)

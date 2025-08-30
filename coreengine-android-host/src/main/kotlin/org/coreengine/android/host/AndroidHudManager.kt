@@ -68,4 +68,6 @@ class AndroidHudManager(
     fun defaultLP() = LayoutParams(
         LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT
     )
+
+    fun get(h: Handle): View? = map[h.id]
 }

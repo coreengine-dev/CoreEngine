@@ -18,9 +18,10 @@
 // Archivo: org/coreengine/framecheck/FrameChecker.kt
 // Rol TCD: 𝝮→𝝎 (observadores modulables tipo "checkers")
 // ─────────────────────────────────────────────────
-package api.coreengine.runtime.engine.metrics
+package org.coreengine.runtime.engine.metrics
 
-import org.coreengine.state.EngineSnapshot
+import org.coreengine.runtime.state.EngineSnapshot
+
 
 data class CheckerReport(val kind: String, val severity: Int, val details: String)
 

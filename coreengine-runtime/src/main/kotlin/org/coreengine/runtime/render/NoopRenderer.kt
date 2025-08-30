@@ -14,9 +14,12 @@
  * limitations under the License.
  */
 
-package api.coreengine.runtime.render
+package org.coreengine.runtime.render
 
-import org.coreengine.camera.Camera
+import org.coreengine.api.camera.Camera
+import org.coreengine.api.entity.Entity
+import org.coreengine.api.render.Renderer
+
 
 /**
  * Renderer nulo para tests/JUnit.
@@ -25,7 +28,7 @@ import org.coreengine.camera.Camera
 
 object NoopRenderer : Renderer {
     override fun begin(camera: Camera) {}
-//    override fun draw(entity: Entity) {}
+    override fun draw(entity: Entity) {}
     override fun end() {}
     override fun clear(r: Float, g: Float, b: Float, a: Float) {}
     override val drawCallsThisFrame: Int = 0

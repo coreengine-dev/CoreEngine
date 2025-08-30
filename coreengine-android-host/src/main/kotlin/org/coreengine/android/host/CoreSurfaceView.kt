@@ -20,11 +20,11 @@ import android.content.Context
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
-import org.coreengine.engine.CoreEngine
-import org.coreengine.engine.EngineController
-import org.coreengine.input.Action
-import org.coreengine.input.InputEvent
-import org.coreengine.render.canvas.CanvasRenderer
+import org.coreengine.api.input.Action
+import org.coreengine.api.input.InputEvent
+import org.coreengine.canvas.CanvasRenderer
+import org.coreengine.runtime.engine.CoreEngine
+import org.coreengine.runtime.engine.EngineController
 
 /**
  * CoreSurfaceView — Host de renderizado basado en SurfaceView.
@@ -64,10 +64,10 @@ class CoreSurfaceView(ctx: Context) : SurfaceView(ctx), SurfaceHolder.Callback {
 
     override fun surfaceChanged(h: SurfaceHolder, f: Int, w: Int, hgt: Int) {
         // Ajusta la cámara activa a las dimensiones reales de la Surface.
-        engine?.sceneManager?.current?.camera?.apply {
+     /*   engine?.sceneManager?.current?.camera?.apply {
             setSize(w.toFloat(), hgt.toFloat())
             setViewport(0, 0, w, hgt)
-        }
+        }*/
     }
 
     override fun surfaceDestroyed(h: SurfaceHolder) {
@@ -89,7 +89,7 @@ class CoreSurfaceView(ctx: Context) : SurfaceView(ctx), SurfaceHolder.Callback {
             else -> return false
         }
         // Post seguro al bus de input del motor; será consumido en el loop.
-        engine?.inputManager?.post(InputEvent.Touch(ev.x, ev.y, action))
+//        engine?.inputManager?.post(InputEvent.Touch(ev.x, ev.y, action))
         return true
     }
 
@@ -108,7 +108,7 @@ class CoreSurfaceView(ctx: Context) : SurfaceView(ctx), SurfaceHolder.Callback {
     fun bind(engine: CoreEngine) {
         this.engine = engine
         // Usa el factory del propio motor si existe; si no, construye el controller estándar.
-        this.controller = engine.createController()
+//        this.controller = engine.createController()
         // Si ya hay una surface válida (raro pero posible), ata y arranca.
         if (holder.surface?.isValid == true) {
             (engine.renderer as? CanvasRenderer)?.attach(holder)

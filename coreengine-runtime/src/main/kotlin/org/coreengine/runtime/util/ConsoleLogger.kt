@@ -15,7 +15,10 @@
  */
 
 // JVM/Tests
-package api.coreengine.runtime.util
+package org.coreengine.runtime.util
+
+import org.coreengine.api.util.LogLevel
+import org.coreengine.api.util.Logger
 
 class ConsoleLogger(
     override var level: LogLevel = LogLevel.VERBOSE,

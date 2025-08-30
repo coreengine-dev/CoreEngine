@@ -20,7 +20,7 @@ package org.coreengine.android.host
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import org.coreengine.hud.HudLayer
+import org.coreengine.api.hud.HudLayer
 
 /**
  * HudAndroidLayer — HUD basado en Views de Android.
@@ -32,52 +32,11 @@ import org.coreengine.hud.HudLayer
  */
 
 // HudAndroidLayer.kt
-class HudAndroidLayer(internal val overlay: FrameLayout) : HudLayer() {
+class HudAndroidLayer(internal val overlay: FrameLayout) : HudLayer {
     fun addView(v: View, lp: ViewGroup.LayoutParams) = overlay.addView(v, lp)
     fun removeView(v: View) = overlay.removeView(v)
     fun clear() = overlay.removeAllViews()
-}
-
-
-class HudAndroidLayer2(val overlay: FrameLayout) : HudLayer() {
-
-    /** Añadir View al overlay con LayoutParams opcionales */
-    fun addView(
-        v: View,
-        lp: ViewGroup.LayoutParams = defaultParams()
-    ) {
-        overlay.addView(v, lp)
-    }
-
-    /** Eliminar View del overlay */
-    fun removeView(v: View) {
-        overlay.removeView(v)
-    }
-
-    /** Eliminar todos los Views del overlay */
-    fun clear() {
-        overlay.removeAllViews()
-    }
-
-    /** LayoutParams por defecto: WRAP_CONTENT arriba a la izquierda */
-    private fun defaultParams(): ViewGroup.LayoutParams =
-        FrameLayout.LayoutParams(
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
-}
-
-
-/** HUD Android real: agrega Views al overlay. */
-class HudAndroidLayer1(private val overlay: FrameLayout) : HudLayer() {
-    fun addView(
-        v: View,
-        lp: ViewGroup.LayoutParams = FrameLayout.LayoutParams(
-            ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
-        )
-    ) = overlay.addView(v, lp)
-
-    fun removeView(v: View) = overlay.removeView(v)
-    fun clear() = overlay.removeAllViews()
+    override var visible: Boolean = true
+    override var zIndex: Int = Int.MAX_VALUE  // siempre al frente
 }
 

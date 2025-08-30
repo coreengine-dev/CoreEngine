@@ -20,7 +20,7 @@
 // Rol TCD: 𝛂→𝜱 (orden de actualización de sistemas/escenas)
 // Planificador no intrusivo: BFS/DFS para tu update().
 // ─────────────────────────────────────────────────
-package api.coreengine.runtime.time
+package org.coreengine.runtime.time
 
 enum class Strategy { BFS, DFS }
 

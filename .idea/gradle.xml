@@ -10,7 +10,14 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/engine" />
+            <option value="$PROJECT_DIR$/coreengine-android-host" />
+            <option value="$PROJECT_DIR$/coreengine-api" />
+            <option value="$PROJECT_DIR$/coreengine-integration" />
+            <option value="$PROJECT_DIR$/coreengine-render-canvas" />
+            <option value="$PROJECT_DIR$/coreengine-render-gl" />
+            <option value="$PROJECT_DIR$/coreengine-runtime" />
+            <option value="$PROJECT_DIR$/ide" />
+            <option value="$PROJECT_DIR$/ide/plugin" />
             <option value="$PROJECT_DIR$/samples" />
             <option value="$PROJECT_DIR$/samples/demo-app" />
           </set>

@@ -14,7 +14,56 @@
  * limitations under the License.
  */
 
-package api.coreengine.runtime.time
+
+package org.coreengine.runtime.time
+
+import org.coreengine.api.time.Clock
+import org.coreengine.api.time.Ticker
+
+class ThreadTicker(private val clock: Clock) : Ticker {
+
+    @Volatile private var thread: Thread? = null
+    @Volatile override var isRunning: Boolean = false
+        private set
+
+    override fun start(loop: (dt: Float) -> Unit) {
+        if (isRunning) return
+        isRunning = true
+        thread = Thread({
+            try {
+                while (isRunning) {
+                    val dt = clock.tick()
+                    loop(dt)
+                    clock.sleepToNextFrame()
+                }
+            } finally {
+                isRunning = false
+            }
+        }, "CoreEngine-Loop").apply {
+            isDaemon = true
+            priority = Thread.NORM_PRIORITY
+            start()
+        }
+    }
+
+    override fun stop() {
+        isRunning = false
+        thread?.let { t ->
+            try { t.join(2000) } finally {
+                if (t.isAlive) t.interrupt()
+            }
+        }
+        thread = null
+    }
+}
+
+
+
+/*
+package org.coreengine.runtime.time
+
+import org.coreengine.api.time.Clock
+import org.coreengine.api.time.Ticker
 
 class ThreadTicker(private val clock: Clock) : Ticker {
     @Volatile private var thread: Thread? = null
@@ -43,3 +92,5 @@ class ThreadTicker(private val clock: Clock) : Ticker {
         thread = null
     }
 }
+
+ */

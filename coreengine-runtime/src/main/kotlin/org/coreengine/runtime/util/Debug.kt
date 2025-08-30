@@ -15,7 +15,10 @@
  */
 
 // coreengine/util/Debug.kt
-package api.coreengine.runtime.util
+package org.coreengine.runtime.util
+
+import org.coreengine.api.util.LogLevel
+import org.coreengine.api.util.Logger
 
 object Debug {
     @Volatile var isEnabled: Boolean = true

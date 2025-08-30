@@ -1,0 +1,28 @@
+Calculating task graph as no cached configuration is available for tasks: projects
+
+> Task :projects
+
+Projects:
+
+------------------------------------------------------------
+Root project 'CoreEngine'
+------------------------------------------------------------
+
+Root project 'CoreEngine'
++--- Project ':coreengine-android-host'
++--- Project ':coreengine-api'
++--- Project ':coreengine-integration'
++--- Project ':coreengine-render-canvas'
++--- Project ':coreengine-render-gl'
++--- Project ':coreengine-runtime'
++--- Project ':ide'
+|    \--- Project ':ide:plugin'
+\--- Project ':samples'
+     \--- Project ':samples:demo-app'
+
+To see a list of the tasks of a project, run gradlew <project-path>:tasks
+For example, try running gradlew :coreengine-android-host:tasks
+
+BUILD SUCCESSFUL in 731ms
+1 actionable task: 1 executed
+Configuration cache entry stored.

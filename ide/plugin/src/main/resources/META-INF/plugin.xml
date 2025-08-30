@@ -1,0 +1,52 @@
+<idea-plugin>
+    <id>org.corestudio.corestudio</id>
+    <name>CoreStudio</name>
+    <vendor email="dev@corestudio.org">CoreStudio</vendor>
+    <description>SceneGraph, Viewport, Inspector, Profiler, Hot Reload.</description>
+
+    <depends>com.intellij.java</depends>
+    <depends>org.jetbrains.kotlin</depends>
+
+    <actions>
+        <action id="org.corestudio.actions.Run"
+            class="org.corestudio.ide.actions.RunAction"
+            text="Run Scene"
+            icon="icons/run.svg">
+            <add-to-group group-id="MainToolbar" anchor="last"/>
+        </action>
+
+        <action id="org.corestudio.actions.Stop"
+            class="org.corestudio.ide.actions.StopAction"
+            text="Stop Scene"
+            icon="icons/stop.svg">
+            <add-to-group group-id="MainToolbar" anchor="last"/>
+        </action>
+
+        <action id="org.corestudio.actions.HotReload"
+            class="org.corestudio.ide.actions.HotReloadAction"
+            text="Hot Reload"
+            icon="icons/reload.svg">
+            <add-to-group group-id="MainToolbar" anchor="last"/>
+        </action>
+    </actions>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <toolWindow id="CoreStudio SceneGraph"
+            anchor="left"
+            icon="icons/scenegraph.svg"
+            factoryClass="org.corestudio.ide.toolwindows.SceneGraphToolWindowFactory"/>
+        <toolWindow id="CoreStudio Viewport"
+            anchor="right"
+            canCloseContent="false"
+            icon="icons/viewport.svg"
+            factoryClass="org.corestudio.ide.toolwindows.ViewportToolWindowFactory"/>
+        <toolWindow id="CoreStudio Inspector"
+            anchor="right"
+            icon="icons/inspector.svg"
+            factoryClass="org.corestudio.ide.toolwindows.InspectorToolWindowFactory"/>
+        <toolWindow id="CoreStudio Profiler"
+            anchor="bottom"
+            icon="icons/profiler.svg"
+            factoryClass="org.corestudio.ide.toolwindows.ProfilerToolWindowFactory"/>
+    </extensions>
+</idea-plugin>

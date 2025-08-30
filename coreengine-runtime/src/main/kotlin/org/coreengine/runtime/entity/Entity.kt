@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package api.coreengine.runtime.entity
+package org.coreengine.runtime.entity
 
-import org.coreengine.camera.Camera
-import org.coreengine.input.Action
-import org.coreengine.input.InputEvent
-import org.coreengine.input.InputListener
-import org.coreengine.render.Renderer
+import org.coreengine.api.camera.Camera
+import org.coreengine.api.input.Action
+import org.coreengine.api.input.InputEvent
+import org.coreengine.api.input.InputListener
+import org.coreengine.api.render.Renderer
+
 
 /**
  * Nodo de escena: transform, hijos y ciclo.
@@ -83,10 +84,12 @@ abstract class Entity : InputListener {
         for (c in kids) if (c.onInput(ev)) return true
 
         // luego self
-        if (ev is InputEvent.Touch && ev.action == Action.UP && hitTest(ev.x, ev.y)) {
+      /*  if (ev is InputEvent.Touch && ev.action == Action.UP && hitTest(ev.x, ev.y)) {
             clickListener?.invoke()
             return clickListener != null
-        }
+        }*/
+
+
         return false
     }
 }

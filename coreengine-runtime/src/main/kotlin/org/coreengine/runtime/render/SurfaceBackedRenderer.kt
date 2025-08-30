@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package api.coreengine.runtime.render
+package org.coreengine.runtime.render
 
 /** Renderers que necesitan una superficie del host para poder dibujar. */
 interface SurfaceBackedRenderer {

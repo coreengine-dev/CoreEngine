@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package api.coreengine.runtime.state
+package org.coreengine.runtime.state
 
-import org.coreengine.engine.SceneFactory
 import kotlinx.coroutines.flow.StateFlow
+import org.coreengine.runtime.engine.SceneFactory
 
 interface EngineStore {
     val uiState: StateFlow<EngineUiState>

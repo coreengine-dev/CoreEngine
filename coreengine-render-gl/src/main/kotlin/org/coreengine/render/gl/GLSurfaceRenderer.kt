@@ -18,9 +18,9 @@ package org.coreengine.render.gl
 
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
-import org.coreengine.camera.Camera
-import org.coreengine.entity.Entity
-import org.coreengine.render.Renderer
+import org.coreengine.api.camera.Camera
+import org.coreengine.api.entity.Entity
+import org.coreengine.api.render.Renderer
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 

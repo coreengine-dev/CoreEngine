@@ -26,7 +26,7 @@
 // Archivo: org/coreengine/engine/profile/DeviceProfile.kt
 // Rol TCD: 𝛂 (tiempo, reloj base del sistema)
 // ─────────────────────────────────────────────────
-package api.coreengine.runtime.engine.profile
+package org.coreengine.runtime.engine.profile
 
 data class DeviceProfile(
     val name: String,

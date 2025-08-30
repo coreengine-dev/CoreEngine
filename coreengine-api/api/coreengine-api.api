@@ -154,6 +154,19 @@ public final class org/coreengine/api/resource/CanvasVbomProvider : org/coreengi
 	public fun create (I)Lorg/coreengine/api/resource/VertexBuffer;
 }
 
+public final class org/coreengine/api/resource/ChannelKey {
+	public fun <init> (Ljava/lang/String;Lkotlin/reflect/KClass;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lkotlin/reflect/KClass;
+	public final fun copy (Ljava/lang/String;Lkotlin/reflect/KClass;)Lorg/coreengine/api/resource/ChannelKey;
+	public static synthetic fun copy$default (Lorg/coreengine/api/resource/ChannelKey;Ljava/lang/String;Lkotlin/reflect/KClass;ILjava/lang/Object;)Lorg/coreengine/api/resource/ChannelKey;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getChannel ()Ljava/lang/String;
+	public final fun getType ()Lkotlin/reflect/KClass;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class org/coreengine/api/resource/DefaultTextureManager : org/coreengine/api/resource/TextureManager {
 	public fun <init> ()V
 }
