@@ -1,0 +1,4 @@
+package scene
+
+class BaseSceneTest {
+}

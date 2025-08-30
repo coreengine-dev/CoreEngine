@@ -1,0 +1,4 @@
+package render
+
+class CanvasRendererTest {
+}

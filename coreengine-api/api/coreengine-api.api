@@ -1,0 +1,360 @@
+public abstract interface class org/coreengine/api/camera/Camera {
+	public abstract fun getHeight ()F
+	public abstract fun getRotation ()F
+	public abstract fun getWidth ()F
+	public abstract fun getXMin ()F
+	public abstract fun getYMin ()F
+	public abstract fun screenToWorld (FF)Lkotlin/Pair;
+	public abstract fun setRotation (F)V
+	public abstract fun setSize (FF)V
+	public abstract fun setViewport (IIII)V
+	public abstract fun worldToScreen (FF)Lkotlin/Pair;
+}
+
+public final class org/coreengine/api/camera/Origin : java/lang/Enum {
+	public static final field BOTTOM_LEFT Lorg/coreengine/api/camera/Origin;
+	public static final field TOP_LEFT Lorg/coreengine/api/camera/Origin;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lorg/coreengine/api/camera/Origin;
+	public static fun values ()[Lorg/coreengine/api/camera/Origin;
+}
+
+public abstract interface class org/coreengine/api/entity/Entity {
+	public abstract fun getVisible ()Z
+	public abstract fun getZIndex ()I
+	public abstract fun onCreate ()V
+	public abstract fun onDraw (Lorg/coreengine/api/render/Renderer;)V
+	public abstract fun onInput (Lorg/coreengine/api/input/InputEvent;)Z
+	public abstract fun onUpdate (F)V
+	public abstract fun setVisible (Z)V
+	public abstract fun setZIndex (I)V
+}
+
+public final class org/coreengine/api/entity/Entity$DefaultImpls {
+	public static fun onCreate (Lorg/coreengine/api/entity/Entity;)V
+	public static fun onDraw (Lorg/coreengine/api/entity/Entity;Lorg/coreengine/api/render/Renderer;)V
+	public static fun onInput (Lorg/coreengine/api/entity/Entity;Lorg/coreengine/api/input/InputEvent;)Z
+	public static fun onUpdate (Lorg/coreengine/api/entity/Entity;F)V
+}
+
+public abstract interface class org/coreengine/api/hud/HudLayer {
+	public abstract fun getVisible ()Z
+	public abstract fun getZIndex ()I
+	public abstract fun onDraw (Lorg/coreengine/api/render/Renderer;)V
+	public abstract fun onInput (Lorg/coreengine/api/input/InputEvent;)Z
+	public abstract fun onUpdate (F)V
+	public abstract fun setVisible (Z)V
+	public abstract fun setZIndex (I)V
+}
+
+public final class org/coreengine/api/hud/HudLayer$DefaultImpls {
+	public static fun onDraw (Lorg/coreengine/api/hud/HudLayer;Lorg/coreengine/api/render/Renderer;)V
+	public static fun onInput (Lorg/coreengine/api/hud/HudLayer;Lorg/coreengine/api/input/InputEvent;)Z
+	public static fun onUpdate (Lorg/coreengine/api/hud/HudLayer;F)V
+}
+
+public final class org/coreengine/api/input/Action : java/lang/Enum {
+	public static final field CANCEL Lorg/coreengine/api/input/Action;
+	public static final field DOWN Lorg/coreengine/api/input/Action;
+	public static final field MOVE Lorg/coreengine/api/input/Action;
+	public static final field UP Lorg/coreengine/api/input/Action;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lorg/coreengine/api/input/Action;
+	public static fun values ()[Lorg/coreengine/api/input/Action;
+}
+
+public abstract class org/coreengine/api/input/InputEvent {
+}
+
+public final class org/coreengine/api/input/InputEvent$Down : org/coreengine/api/input/InputEvent {
+	public fun <init> (FFI)V
+	public synthetic fun <init> (FFIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()F
+	public final fun component2 ()F
+	public final fun component3 ()I
+	public final fun copy (FFI)Lorg/coreengine/api/input/InputEvent$Down;
+	public static synthetic fun copy$default (Lorg/coreengine/api/input/InputEvent$Down;FFIILjava/lang/Object;)Lorg/coreengine/api/input/InputEvent$Down;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getId ()I
+	public final fun getX ()F
+	public final fun getY ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/coreengine/api/input/InputEvent$Move : org/coreengine/api/input/InputEvent {
+	public fun <init> (FFI)V
+	public synthetic fun <init> (FFIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()F
+	public final fun component2 ()F
+	public final fun component3 ()I
+	public final fun copy (FFI)Lorg/coreengine/api/input/InputEvent$Move;
+	public static synthetic fun copy$default (Lorg/coreengine/api/input/InputEvent$Move;FFIILjava/lang/Object;)Lorg/coreengine/api/input/InputEvent$Move;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getId ()I
+	public final fun getX ()F
+	public final fun getY ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/coreengine/api/input/InputEvent$Up : org/coreengine/api/input/InputEvent {
+	public fun <init> (FFI)V
+	public synthetic fun <init> (FFIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()F
+	public final fun component2 ()F
+	public final fun component3 ()I
+	public final fun copy (FFI)Lorg/coreengine/api/input/InputEvent$Up;
+	public static synthetic fun copy$default (Lorg/coreengine/api/input/InputEvent$Up;FFIILjava/lang/Object;)Lorg/coreengine/api/input/InputEvent$Up;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getId ()I
+	public final fun getX ()F
+	public final fun getY ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class org/coreengine/api/input/InputListener {
+	public abstract fun onInput (Lorg/coreengine/api/input/InputEvent;)Z
+}
+
+public abstract interface class org/coreengine/api/render/GLSurfaceHost {
+	public abstract fun getHeight ()I
+	public abstract fun getWidth ()I
+	public abstract fun makeCurrent ()V
+	public abstract fun swapBuffers ()V
+}
+
+public final class org/coreengine/api/render/RenderBackend : java/lang/Enum {
+	public static final field CANVAS Lorg/coreengine/api/render/RenderBackend;
+	public static final field GLS Lorg/coreengine/api/render/RenderBackend;
+	public static final field OPENGL Lorg/coreengine/api/render/RenderBackend;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lorg/coreengine/api/render/RenderBackend;
+	public static fun values ()[Lorg/coreengine/api/render/RenderBackend;
+}
+
+public abstract interface class org/coreengine/api/render/Renderer {
+	public abstract fun begin (Lorg/coreengine/api/camera/Camera;)V
+	public abstract fun clear (FFFF)V
+	public abstract fun draw (Lorg/coreengine/api/entity/Entity;)V
+	public abstract fun end ()V
+	public abstract fun getDrawCallsThisFrame ()I
+}
+
+public final class org/coreengine/api/resource/CanvasVBOM : org/coreengine/api/resource/VertexBufferObjectManager {
+	public fun <init> ()V
+	public fun create (I)Lorg/coreengine/api/resource/VertexBuffer;
+	public fun destroy (Lorg/coreengine/api/resource/VertexBuffer;)V
+	public fun update (Lorg/coreengine/api/resource/VertexBuffer;[FI)V
+}
+
+public final class org/coreengine/api/resource/CanvasVbomProvider : org/coreengine/api/resource/VbomProvider {
+	public fun <init> ()V
+	public fun create (I)Lorg/coreengine/api/resource/VertexBuffer;
+}
+
+public final class org/coreengine/api/resource/DefaultTextureManager : org/coreengine/api/resource/TextureManager {
+	public fun <init> ()V
+}
+
+public abstract interface class org/coreengine/api/resource/EngineServices {
+	public abstract fun getFonts ()Lorg/coreengine/api/resource/FontManager;
+	public abstract fun getLogger ()Lorg/coreengine/api/util/Logger;
+	public abstract fun getRenderer ()Lorg/coreengine/api/render/Renderer;
+	public abstract fun getResourceManager ()Lorg/coreengine/api/resource/ResourceManager;
+	public abstract fun getTextures ()Lorg/coreengine/api/resource/TextureManager;
+	public abstract fun getVbom ()Lorg/coreengine/api/resource/VbomProvider;
+}
+
+public final class org/coreengine/api/resource/EngineServices$DefaultImpls {
+	public static fun getFonts (Lorg/coreengine/api/resource/EngineServices;)Lorg/coreengine/api/resource/FontManager;
+	public static fun getTextures (Lorg/coreengine/api/resource/EngineServices;)Lorg/coreengine/api/resource/TextureManager;
+	public static fun getVbom (Lorg/coreengine/api/resource/EngineServices;)Lorg/coreengine/api/resource/VbomProvider;
+}
+
+public abstract interface class org/coreengine/api/resource/FontManager {
+}
+
+public abstract interface class org/coreengine/api/resource/Loader {
+	public abstract fun load (Ljava/lang/String;)Ljava/lang/Object;
+}
+
+public final class org/coreengine/api/resource/ResourceManager {
+	public fun <init> ()V
+	public fun <init> (Lorg/coreengine/api/resource/TextureManager;Lorg/coreengine/api/resource/FontManager;Lorg/coreengine/api/resource/VbomProvider;)V
+	public synthetic fun <init> (Lorg/coreengine/api/resource/TextureManager;Lorg/coreengine/api/resource/FontManager;Lorg/coreengine/api/resource/VbomProvider;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun adopt (Ljava/lang/String;Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Ljava/lang/String;)V
+	public static synthetic fun adopt$default (Lorg/coreengine/api/resource/ResourceManager;Ljava/lang/String;Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Ljava/lang/String;ILjava/lang/Object;)V
+	public final fun clearAll ()V
+	public final fun contains (Ljava/lang/String;)Z
+	public final fun get (Ljava/lang/String;Lkotlin/reflect/KClass;Ljava/lang/String;)Ljava/lang/Object;
+	public static synthetic fun get$default (Lorg/coreengine/api/resource/ResourceManager;Ljava/lang/String;Lkotlin/reflect/KClass;Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun getFonts ()Lorg/coreengine/api/resource/FontManager;
+	public final fun getTextures ()Lorg/coreengine/api/resource/TextureManager;
+	public final fun getVbom ()Lorg/coreengine/api/resource/VbomProvider;
+	public final fun registerChannel (Ljava/lang/String;Lkotlin/reflect/KClass;Lorg/coreengine/api/resource/Loader;Lkotlin/jvm/functions/Function1;)V
+	public final fun release (Ljava/lang/String;)V
+	public final fun releaseOwnedBy (Ljava/lang/String;)V
+}
+
+public final class org/coreengine/api/resource/ResourcePack {
+	public fun <init> ()V
+	public fun <init> (Ljava/util/Map;Ljava/util/Map;)V
+	public synthetic fun <init> (Ljava/util/Map;Ljava/util/Map;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/util/Map;
+	public final fun component2 ()Ljava/util/Map;
+	public final fun copy (Ljava/util/Map;Ljava/util/Map;)Lorg/coreengine/api/resource/ResourcePack;
+	public static synthetic fun copy$default (Lorg/coreengine/api/resource/ResourcePack;Ljava/util/Map;Ljava/util/Map;ILjava/lang/Object;)Lorg/coreengine/api/resource/ResourcePack;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFonts ()Ljava/util/Map;
+	public final fun getTextures ()Ljava/util/Map;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class org/coreengine/api/resource/TextureManager {
+}
+
+public abstract interface class org/coreengine/api/resource/VbomProvider {
+	public abstract fun create (I)Lorg/coreengine/api/resource/VertexBuffer;
+}
+
+public final class org/coreengine/api/resource/VertexBuffer {
+	public fun <init> (II)V
+	public final fun component1 ()I
+	public final fun component2 ()I
+	public final fun copy (II)Lorg/coreengine/api/resource/VertexBuffer;
+	public static synthetic fun copy$default (Lorg/coreengine/api/resource/VertexBuffer;IIILjava/lang/Object;)Lorg/coreengine/api/resource/VertexBuffer;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCapacity ()I
+	public final fun getId ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class org/coreengine/api/resource/VertexBufferObjectManager {
+	public abstract fun create (I)Lorg/coreengine/api/resource/VertexBuffer;
+	public abstract fun destroy (Lorg/coreengine/api/resource/VertexBuffer;)V
+	public abstract fun update (Lorg/coreengine/api/resource/VertexBuffer;[FI)V
+}
+
+public abstract interface class org/coreengine/api/scene/Scene {
+	public static final field Companion Lorg/coreengine/api/scene/Scene$Companion;
+	public abstract fun getCamera ()Lorg/coreengine/api/camera/Camera;
+	public static fun getHudSupplier ()Lkotlin/jvm/functions/Function0;
+	public abstract fun getId ()Ljava/lang/String;
+	public abstract fun getManifest ()Lorg/coreengine/api/scene/SceneManifest;
+	public abstract fun onCreate ()V
+	public abstract fun onCreateResources (Lorg/coreengine/api/resource/EngineServices;)V
+	public abstract fun onDestroy ()V
+	public abstract fun onInput (Lorg/coreengine/api/input/InputEvent;)Z
+	public abstract fun onRender (Lorg/coreengine/api/render/Renderer;)V
+	public abstract fun onUpdate (F)V
+	public static fun setHudSupplier (Lkotlin/jvm/functions/Function0;)V
+}
+
+public final class org/coreengine/api/scene/Scene$Companion {
+	public final fun getHudSupplier ()Lkotlin/jvm/functions/Function0;
+	public final fun setHudSupplier (Lkotlin/jvm/functions/Function0;)V
+}
+
+public final class org/coreengine/api/scene/Scene$DefaultImpls {
+	public static fun getId (Lorg/coreengine/api/scene/Scene;)Ljava/lang/String;
+	public static fun onCreate (Lorg/coreengine/api/scene/Scene;)V
+	public static fun onCreateResources (Lorg/coreengine/api/scene/Scene;Lorg/coreengine/api/resource/EngineServices;)V
+	public static fun onDestroy (Lorg/coreengine/api/scene/Scene;)V
+	public static fun onInput (Lorg/coreengine/api/scene/Scene;Lorg/coreengine/api/input/InputEvent;)Z
+	public static fun onRender (Lorg/coreengine/api/scene/Scene;Lorg/coreengine/api/render/Renderer;)V
+	public static fun onUpdate (Lorg/coreengine/api/scene/Scene;F)V
+}
+
+public final class org/coreengine/api/scene/SceneManifest {
+	public fun <init> (Ljava/lang/String;IIIF)V
+	public synthetic fun <init> (Ljava/lang/String;IIIFILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()I
+	public final fun component3 ()I
+	public final fun component4 ()I
+	public final fun component5 ()F
+	public final fun copy (Ljava/lang/String;IIIF)Lorg/coreengine/api/scene/SceneManifest;
+	public static synthetic fun copy$default (Lorg/coreengine/api/scene/SceneManifest;Ljava/lang/String;IIIFILjava/lang/Object;)Lorg/coreengine/api/scene/SceneManifest;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getId ()Ljava/lang/String;
+	public final fun getMaxSprites ()I
+	public final fun getMaxTextChars ()I
+	public final fun getMemBudgetKB ()I
+	public final fun getTargetMsPerFrame ()F
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class org/coreengine/api/time/Cancellable {
+	public abstract fun cancel ()V
+}
+
+public abstract interface class org/coreengine/api/time/Clock {
+	public abstract fun nanoTime ()J
+	public abstract fun sleepToNextFrame ()V
+	public abstract fun tick ()F
+}
+
+public final class org/coreengine/api/time/FixedStepConfig {
+	public fun <init> ()V
+	public fun <init> (JJ)V
+	public synthetic fun <init> (JJILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()J
+	public final fun component2 ()J
+	public final fun copy (JJ)Lorg/coreengine/api/time/FixedStepConfig;
+	public static synthetic fun copy$default (Lorg/coreengine/api/time/FixedStepConfig;JJILjava/lang/Object;)Lorg/coreengine/api/time/FixedStepConfig;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getMaxFrameClampNanos ()J
+	public final fun getStepNanos ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class org/coreengine/api/time/FixedStepLoop {
+	public abstract fun getConfig ()Lorg/coreengine/api/time/FixedStepConfig;
+	public abstract fun start (Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;)Lorg/coreengine/api/time/Cancellable;
+}
+
+public abstract interface class org/coreengine/api/time/Scheduler {
+	public abstract fun scheduleAtFixedRate (JLkotlin/jvm/functions/Function1;)Lorg/coreengine/api/time/Cancellable;
+	public abstract fun scheduleOnce (JLkotlin/jvm/functions/Function0;)Lorg/coreengine/api/time/Cancellable;
+}
+
+public abstract interface class org/coreengine/api/time/Ticker {
+	public abstract fun isRunning ()Z
+	public abstract fun start (Lkotlin/jvm/functions/Function1;)V
+	public abstract fun stop ()V
+}
+
+public final class org/coreengine/api/time/TimeConstantsKt {
+	public static final field NANOS_PER_SECOND J
+}
+
+public final class org/coreengine/api/util/LogLevel : java/lang/Enum {
+	public static final field DEBUG Lorg/coreengine/api/util/LogLevel;
+	public static final field ERROR Lorg/coreengine/api/util/LogLevel;
+	public static final field INFO Lorg/coreengine/api/util/LogLevel;
+	public static final field NONE Lorg/coreengine/api/util/LogLevel;
+	public static final field VERBOSE Lorg/coreengine/api/util/LogLevel;
+	public static final field WARN Lorg/coreengine/api/util/LogLevel;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lorg/coreengine/api/util/LogLevel;
+	public static fun values ()[Lorg/coreengine/api/util/LogLevel;
+}
+
+public abstract interface class org/coreengine/api/util/Logger {
+	public abstract fun getLevel ()Lorg/coreengine/api/util/LogLevel;
+	public abstract fun getTag ()Ljava/lang/String;
+	public abstract fun log (Lorg/coreengine/api/util/LogLevel;Ljava/lang/String;Ljava/lang/Throwable;Ljava/lang/String;)V
+	public abstract fun setLevel (Lorg/coreengine/api/util/LogLevel;)V
+	public abstract fun setTag (Ljava/lang/String;)V
+}
+
+public final class org/coreengine/api/util/Logger$DefaultImpls {
+	public static synthetic fun log$default (Lorg/coreengine/api/util/Logger;Lorg/coreengine/api/util/LogLevel;Ljava/lang/String;Ljava/lang/Throwable;Ljava/lang/String;ILjava/lang/Object;)V
+}
+

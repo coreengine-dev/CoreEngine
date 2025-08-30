@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2025 Juan José Nicolini
  *
@@ -14,36 +15,40 @@
  * limitations under the License.
  */
 
-package org.coreengine.demo
+package org.coreengine_runtime.demo
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import org.coreengine.engine.CoreEngine
-import org.coreengine.scene.SceneManager
-import org.coreengine.scene.DemoScene
+//import org.coreengine.engine.CoreEngine
+//import org.coreengine.scene.SceneManager
+//import org.coreengine.scene.DemoScene
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var engine: CoreEngine
-    private lateinit var sceneManager: SceneManager
+//    private lateinit var engine: CoreEngine
+//    private lateinit var sceneManager: SceneManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        engine = CoreEngine(targetFps = 60)
-        sceneManager = SceneManager()
-        sceneManager.setScene(DemoScene())
+//        engine = CoreEngine(targetFps = 60)
+//        sceneManager = SceneManager()
+//        sceneManager.setScene(DemoScene())
 
         Thread {
-            engine.start(
-                update = { sceneManager.update() },
-                render = { sceneManager.render() }
-            )
+//            engine.start(
+//                update = { sceneManager.update() },
+//                render = { sceneManager.render() }
+//            )
         }.start()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        engine.stop()
+//        engine.stop()
     }
 }
+
+
+
+

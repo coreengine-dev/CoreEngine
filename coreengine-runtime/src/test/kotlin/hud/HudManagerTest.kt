@@ -1,0 +1,4 @@
+package hud
+
+class HudManagerTest {
+}
