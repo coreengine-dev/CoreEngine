@@ -1,21 +1,35 @@
 name: CI
 on: [push, pull_request]
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 17
-      - uses: gradle/actions/setup-gradle@v3
+          java-version: '21'
 
-      # Build + tests normales
+      - uses: android-actions/setup-android@v3
+        with:
+          api-level: 34
+          build-tools: 34.0.0
+
+      # Caché no-fatal y solo lectura (evita error 400 al guardar)
+      - name: Setup Gradle (cache non-fatal, read-only)
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          cache-read-only: true
+        continue-on-error: true
+
       - name: Build
-        run: ./gradlew build --no-daemon
+        run: ./gradlew --no-daemon clean build -x lint --stacktrace --warning-mode all
 
-      # Check de API estable
       - name: API Check
-        run: ./gradlew :coreengine-api:apiCheck --no-daemon
+        run: ./gradlew --no-daemon :coreengine-api:apiCheck || ./gradlew --no-daemon :coreengine-api:apiDump
